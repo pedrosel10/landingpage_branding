@@ -7,9 +7,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Preload all brand backgrounds and SVGs immediately to avoid black flashes
+  preloadAllBrandAssets();
+
   // Showcase Grid — Synchronized Two-Group Alternating Slider
   initGridCardSliders();
 });
+
+// Preloads and decodes every single image and SVG on page load
+function preloadAllBrandAssets() {
+  const allImages = Array.from(document.querySelectorAll('.branding-grid img'));
+  
+  allImages.forEach(img => {
+    // Force immediate browser fetching
+    const src = img.getAttribute('src');
+    if (src) {
+      const preloader = new Image();
+      preloader.src = src;
+      if ('decode' in preloader) {
+        preloader.decode().catch(() => {});
+      }
+    }
+  });
+}
 
 function initGridCardSliders() {
   const cards = Array.from(document.querySelectorAll('.grid-card.has-slides'));
@@ -34,10 +54,19 @@ function initGridCardSliders() {
       if (slides.length <= 1) return;
 
       const current = state.get(card);
-      slides[current].classList.remove('active');
       const next = (current + 1) % slides.length;
+      
+      const nextSlide = slides[next];
+      const nextBg = nextSlide.querySelector('.slide-bg');
+
+      // Se a imagem seguinte ainda não carregou no navegador, não avança para evitar flash preto
+      if (nextBg && !nextBg.complete) {
+        return;
+      }
+
+      slides[current].classList.remove('active');
       state.set(card, next);
-      slides[next].classList.add('active');
+      nextSlide.classList.add('active');
     });
   }
 
