@@ -340,11 +340,12 @@ html, body {
 /* Responsive adjustments for Mobile & Tablet */
 @media (max-width: 768px) {
   .hero {
+    min-height: auto;
     justify-content: space-between;
   }
 
   .hero-content {
-    padding-top: clamp(28px, 5vh, 44px);
+    padding-top: clamp(28px, 8vw, 44px);
     padding-inline: 16px;
   }
 
@@ -356,11 +357,11 @@ html, body {
 
   .hero-subtitle {
     font-size: clamp(0.9rem, 3.4vw, 1.05rem);
-    margin-top: clamp(12px, 1.8vh, 16px);
+    margin-top: clamp(12px, 3vw, 16px);
   }
 
   .hero-cta-wrapper {
-    margin-top: clamp(14px, 2vh, 20px);
+    margin-top: clamp(14px, 3.5vw, 20px);
   }
 
   .hero-btn {
@@ -374,7 +375,7 @@ html, body {
     left: auto;
     transform: none;
     width: 100%;
-    height: clamp(380px, 56vh, 540px);
+    height: clamp(380px, 110vw, 540px);
     margin-top: -10px;
   }
 
@@ -399,7 +400,7 @@ html, body {
   }
 
   .hero-image-container {
-    height: 52vh;
+    height: 420px;
   }
 }
 
@@ -422,7 +423,7 @@ html, body {
   }
 
   .hero-image-container {
-    height: 52vh;
+    height: 360px;
   }
 }
 
