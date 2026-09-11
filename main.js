@@ -12,7 +12,107 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Showcase Grid — Synchronized Two-Group Alternating Slider
   initGridCardSliders();
+
+  // Método — revela a linha do tempo quando entra na viewport
+  initMethodReveal();
+
+  // Slides — caixa de seleção que acende uma imagem por vez
+  initSlidesSpotlight();
 });
+
+function initSlidesSpotlight() {
+  const section = document.querySelector('.slides');
+  if (!section) return;
+
+  const items = Array.from(section.querySelectorAll('.slides-item'));
+  if (!items.length) return;
+
+  // Só apaga a esteira depois de garantir que a caixa vai funcionar
+  section.classList.add('is-spotlight');
+
+  const DWELL = 2800;   // tempo parado em cada imagem
+  const MARGIN = 0.14;  // zona segura: 14% de cada lado ficam fora de jogo
+  const TICK = 200;
+
+  let current = null;
+  let litAt = 0;
+  let visible = true;
+
+  // Imagem inteira dentro da faixa central da tela, longe das bordas
+  function inSafeZone(el) {
+    const rect = el.getBoundingClientRect();
+    const vw = window.innerWidth;
+    return rect.left > vw * MARGIN && rect.right < vw * (1 - MARGIN);
+  }
+
+  function pick() {
+    const currentSrc = current ? current.querySelector('img').getAttribute('src') : null;
+
+    const pool = items.filter(el => {
+      if (el === current) return false;
+      if (currentSrc && el.querySelector('img').getAttribute('src') === currentSrc) return false;
+      return inSafeZone(el);
+    });
+    if (!pool.length) return null;
+
+    // Prefere saltar para outra faixa, para a caixa não andar só na horizontal
+    const currentRow = current ? current.parentElement : null;
+    const otherRows = pool.filter(el => el.parentElement !== currentRow);
+    const from = otherRows.length ? otherRows : pool;
+
+    return from[Math.floor(Math.random() * from.length)];
+  }
+
+  function jump() {
+    const next = pick();
+    if (!next) return;
+
+    if (current) current.classList.remove('is-lit');
+    current = next;
+    current.classList.add('is-lit');
+    litAt = performance.now();
+  }
+
+  // Não gasta trabalho enquanto a dobra está fora da tela
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      visible = entries[0].isIntersecting;
+    }, { threshold: 0 }).observe(section);
+  }
+
+  jump();
+
+  setInterval(() => {
+    if (!visible) return;
+    if (!current) {
+      jump();
+      return;
+    }
+    // Troca no fim do tempo, ou antes se a imagem estiver chegando na borda
+    if (performance.now() - litAt > DWELL || !inSafeZone(current)) jump();
+  }, TICK);
+}
+
+function initMethodReveal() {
+  const section = document.querySelector('.method');
+  if (!section) return;
+
+  if (!('IntersectionObserver' in window)) return;
+
+  // Só esconde depois de garantir que o observer vai revelar
+  section.classList.add('js-reveal');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+  observer.observe(section);
+}
 
 // Preloads and decodes every single image and SVG on page load
 function preloadAllBrandAssets() {

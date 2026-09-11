@@ -715,3 +715,713 @@ body {
     display: none !important;
   }
 }
+/* ==========================================================================
+   Método — Linha do Tempo
+   ========================================================================== */
+.method {
+  --tl-text: #F2F0EA;
+  --tl-muted: rgba(242, 240, 234, 0.46);
+  --tl-line: rgba(242, 240, 234, 0.32);
+  --tl-line-soft: rgba(242, 240, 234, 0.19);
+  --tl-accent: var(--color-bg);
+
+  position: relative;
+  width: 100%;
+  background-color: #101010;
+  color: var(--tl-text);
+  font-family: var(--font-sans);
+  padding: clamp(72px, 9vw, 132px) clamp(20px, 4vw, 64px) clamp(84px, 10vw, 148px);
+  user-select: none;
+}
+
+.tl-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.method-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+/* Cabeçalho */
+.method-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(12px, 1.5vw, 20px);
+  margin-bottom: clamp(48px, 6.5vw, 96px);
+}
+
+.method-title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(2.3rem, 5.4vw, 5rem);
+  line-height: 1;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+
+/* Setas / ornamentos (SVG) */
+.tl-arrow {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  display: block;
+}
+
+.tl-arrow--head {
+  width: clamp(34px, 3.4vw, 48px);
+  height: clamp(11px, 1.1vw, 15px);
+  color: var(--tl-text);
+}
+
+/* --------------------------------------------------------------------------
+   Desktop — percurso horizontal (8 marcos em 8 colunas iguais)
+   Os nós ficam no centro de cada coluna: 6.25%, 18.75% ... 93.75%
+   -------------------------------------------------------------------------- */
+.tl--desktop {
+  display: none;
+  position: relative;
+}
+
+.tl-row {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+}
+
+/* Linhas cujos limites caem exatamente sobre os nós (7 vãos entre 8 nós) */
+.tl-row--segments {
+  grid-template-columns: repeat(7, 1fr);
+  margin-inline: 6.25%;
+}
+
+/* Grupos: Estratégia de Marca / Identidade de Marca */
+.tl-group {
+  grid-row: 1;
+  position: relative;
+  text-align: center;
+  padding-bottom: clamp(38px, 4.6vw, 66px);
+}
+
+.tl-group--a {
+  grid-column: 1 / 6;
+  --span: 5;
+}
+
+.tl-group--b {
+  grid-column: 5 / 9;
+  --span: 4;
+}
+
+.tl-group-label {
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 1.55vw, 1.7rem);
+  line-height: 1.2;
+}
+
+.tl-bracket {
+  position: absolute;
+  bottom: 0;
+  height: clamp(32px, 4vw, 58px);
+  left: calc(50% / var(--span));
+  right: calc(50% / var(--span));
+  border-top: 1px solid var(--tl-line);
+}
+
+.tl-group--a .tl-bracket {
+  right: calc(50% / var(--span) + 5px);
+}
+
+.tl-group--b .tl-bracket {
+  left: calc(50% / var(--span) + 5px);
+}
+
+.tl-bracket::before,
+.tl-bracket::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px dashed var(--tl-line-soft);
+}
+
+.tl-bracket::before {
+  left: 0;
+}
+
+.tl-bracket::after {
+  right: 0;
+}
+
+/* Marcos */
+.tl-steps {
+  list-style: none;
+  padding-bottom: clamp(13px, 1.5vw, 20px);
+}
+
+.tl-step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-inline: 4px;
+  font-size: clamp(0.6rem, 0.76vw, 0.8rem);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  line-height: 1.3;
+}
+
+.tl-step--final {
+  color: var(--tl-accent);
+}
+
+.tl-step-arrow {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translate(-50%, -50%);
+  width: clamp(22px, 2.4vw, 36px);
+  height: clamp(8px, 0.8vw, 11px);
+  color: var(--tl-line);
+}
+
+/* Eixo */
+.tl-axis-wrap {
+  position: relative;
+}
+
+.tl-axis {
+  position: relative;
+  height: 12px;
+  align-items: center;
+}
+
+.tl-axis::before {
+  content: '';
+  position: absolute;
+  left: 6.25%;
+  right: 6.25%;
+  top: 50%;
+  height: 1.5px;
+  margin-top: -0.75px;
+  background-color: var(--tl-text);
+}
+
+.tl-dot {
+  position: relative;
+  justify-self: center;
+  align-self: center;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--tl-text);
+}
+
+.tl-dot--final {
+  background-color: var(--tl-accent);
+}
+
+/* Ornamento: a logo é usada como máscara, então a cor vem do CSS */
+.tl-ornament,
+.tl-m-ornament {
+  background-color: var(--tl-accent);
+  -webkit-mask: url('logo_clara.svg') center / contain no-repeat;
+  mask: url('logo_clara.svg') center / contain no-repeat;
+}
+
+.tl-ornament {
+  position: absolute;
+  top: 50%;
+  width: clamp(24px, 2.8vw, 40px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+}
+
+.tl-ornament--left {
+  left: 0;
+}
+
+.tl-ornament--right {
+  left: 100%;
+}
+
+/* Entregas */
+.tl-deliv-wrap {
+  position: relative;
+}
+
+.tl-deliv {
+  min-height: clamp(158px, 16vw, 208px);
+}
+
+.tl-deliv-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-wrap: balance;
+  padding: clamp(26px, 3.2vw, 44px) 12px clamp(28px, 3.4vw, 46px);
+  border-left: 1px dashed var(--tl-line-soft);
+  font-size: clamp(0.82rem, 0.98vw, 1.05rem);
+  line-height: 1.45;
+}
+
+.tl-deliv-item--1 { grid-column: 1 / 3; }
+.tl-deliv-item--2 { grid-column: 3 / 5; }
+.tl-deliv-item--3 { grid-column: 5 / 6; }
+
+.tl-deliv-item--4 {
+  grid-column: 6 / 7;
+  border-right: 1px dashed var(--tl-line-soft);
+}
+
+/* Entrega final (sob o último nó) */
+.tl-final {
+  --tl-final-w: clamp(148px, 14vw, 196px);
+  position: absolute;
+  top: 0;
+  /* centrado sob o último nó (93.75%) sem usar transform — o reveal usa transform */
+  left: calc(93.75% - var(--tl-final-w) / 2);
+  width: var(--tl-final-w);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--tl-accent);
+}
+
+.tl-final-arrow {
+  width: 12px;
+  height: clamp(42px, 4.8vw, 60px);
+}
+
+.tl-final-list {
+  list-style: none;
+  margin-top: clamp(8px, 1vw, 14px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(7px, 0.85vw, 12px);
+  text-align: center;
+  font-size: clamp(0.82rem, 0.98vw, 1.05rem);
+  line-height: 1.35;
+}
+
+/* Fases */
+.tl-phases {
+  margin-top: clamp(22px, 2.8vw, 42px);
+}
+
+.tl-phase {
+  position: relative;
+  text-align: center;
+  padding-top: clamp(16px, 1.9vw, 26px);
+  font-family: var(--font-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: clamp(0.85rem, 1.05vw, 1.2rem);
+  color: var(--tl-muted);
+}
+
+.tl-phase--1 { grid-column: 1 / 3; }
+.tl-phase--2 { grid-column: 3 / 5; }
+.tl-phase--3 { grid-column: 5 / 7; }
+.tl-phase--4 { grid-column: 7 / 8; }
+
+.tl-phase-rule {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  right: 5px;
+  height: 6px;
+  border-top: 1px solid var(--tl-line-soft);
+}
+
+.tl-phase-rule::before,
+.tl-phase-rule::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 6px;
+  background-color: var(--tl-line-soft);
+}
+
+.tl-phase-rule::before { left: 0; }
+.tl-phase-rule::after { right: 0; }
+
+/* --------------------------------------------------------------------------
+   Mobile / Tablet — percurso vertical centralizado
+   O trilho é a soma dos conectores desenhados no topo de cada bloco,
+   então a linha nunca cruza um texto.
+   -------------------------------------------------------------------------- */
+.tl--mobile {
+  --tl-dot: 9px;
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.tl-m-group,
+.tl-m-phase,
+.tl-m-step,
+.tl-m-deliv,
+.tl-m-final,
+.tl-m-final-arrow,
+.tl-m-ornament {
+  position: relative;
+}
+
+/* Conector vertical (o trilho) */
+.tl-m-group::before,
+.tl-m-phase::before,
+.tl-m-step::before,
+.tl-m-deliv::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: var(--c);
+  margin-left: -0.5px;
+  background-color: var(--tl-line-soft);
+}
+
+/* Grupos — divisor com réguas laterais */
+.tl-m-group {
+  --c: clamp(34px, 9vw, 46px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 3.5vw, 18px);
+  padding-top: calc(var(--c) + clamp(14px, 4vw, 20px));
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.35rem, 5.4vw, 1.85rem);
+  line-height: 1.15;
+}
+
+.tl-m-rule {
+  flex: 1 1 0;
+  min-width: 14px;
+  height: 0;
+  border-top: 1px solid var(--tl-line);
+}
+
+.tl-m-rule--dashed {
+  border-top-style: dashed;
+  border-top-color: var(--tl-line-soft);
+}
+
+.tl-m-txt {
+  flex: 0 1 auto;
+  text-wrap: balance;
+}
+
+/* Fases */
+.tl-m-phase {
+  --c: clamp(26px, 7vw, 36px);
+  padding-top: calc(var(--c) + clamp(12px, 3.4vw, 16px));
+  font-family: var(--font-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: clamp(0.82rem, 3.4vw, 0.98rem);
+  color: var(--tl-muted);
+}
+
+/* Marcos */
+.tl-m-step {
+  --c: clamp(20px, 5vw, 26px);
+  padding-top: calc(var(--c) + var(--tl-dot) + clamp(11px, 3vw, 14px));
+  font-size: clamp(0.8rem, 3.4vw, 0.9rem);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.tl-m-step::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: var(--c);
+  width: var(--tl-dot);
+  height: var(--tl-dot);
+  margin-left: calc(var(--tl-dot) / -2);
+  border-radius: 50%;
+  background-color: var(--tl-text);
+}
+
+.tl-m-step--final {
+  color: var(--tl-accent);
+}
+
+.tl-m-step--final::after {
+  background-color: var(--tl-accent);
+}
+
+/* Entregas */
+.tl-m-deliv {
+  --c: clamp(20px, 5.5vw, 28px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(11px, 3.2vw, 16px);
+  padding-top: calc(var(--c) + clamp(11px, 3vw, 15px));
+  font-size: clamp(0.95rem, 3.9vw, 1.08rem);
+  line-height: 1.4;
+}
+
+/* Entrega final */
+.tl-m-final-arrow {
+  display: block;
+  width: 12px;
+  height: clamp(40px, 10vw, 54px);
+  margin: clamp(12px, 3.4vw, 16px) auto 0;
+  color: var(--tl-accent);
+}
+
+.tl-m-final {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(7px, 2vw, 10px);
+  margin-top: clamp(10px, 3vw, 14px);
+  color: var(--tl-accent);
+  font-size: clamp(0.95rem, 3.9vw, 1.08rem);
+  line-height: 1.35;
+}
+
+/* Ornamentos nas pontas do percurso */
+.tl-m-ornament {
+  display: block;
+  width: clamp(24px, 6.5vw, 30px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+
+.tl-m-ornament--end {
+  margin-top: clamp(34px, 9vw, 46px);
+}
+
+/* --------------------------------------------------------------------------
+   Troca de layout
+   -------------------------------------------------------------------------- */
+@media (min-width: 981px) {
+  .tl--desktop { display: block; }
+  .tl--mobile { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Reveal no scroll
+   -------------------------------------------------------------------------- */
+/* O estado inicial só é aplicado quando o JS marca .js-reveal —
+   sem JS a seção aparece completa. */
+.method .tl-reveal,
+.method .tl-step,
+.method .tl-dot {
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
+}
+
+.method.js-reveal .tl-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.method.js-reveal .tl-step,
+.method.js-reveal .tl-dot {
+  opacity: 0;
+}
+
+.method.js-reveal.is-visible .tl-reveal,
+.method.js-reveal.is-visible .tl-step,
+.method.js-reveal.is-visible .tl-dot {
+  opacity: 1;
+  transform: none;
+}
+
+.method.js-reveal .tl-axis::before {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.12s;
+}
+
+.method.js-reveal.is-visible .tl-axis::before {
+  transform: scaleX(1);
+}
+
+.tl-steps .tl-step:nth-child(1), .tl-axis .tl-dot:nth-child(1) { --d: 0.18s; }
+.tl-steps .tl-step:nth-child(2), .tl-axis .tl-dot:nth-child(2) { --d: 0.28s; }
+.tl-steps .tl-step:nth-child(3), .tl-axis .tl-dot:nth-child(3) { --d: 0.38s; }
+.tl-steps .tl-step:nth-child(4), .tl-axis .tl-dot:nth-child(4) { --d: 0.48s; }
+.tl-steps .tl-step:nth-child(5), .tl-axis .tl-dot:nth-child(5) { --d: 0.58s; }
+.tl-steps .tl-step:nth-child(6), .tl-axis .tl-dot:nth-child(6) { --d: 0.68s; }
+.tl-steps .tl-step:nth-child(7), .tl-axis .tl-dot:nth-child(7) { --d: 0.78s; }
+.tl-steps .tl-step:nth-child(8), .tl-axis .tl-dot:nth-child(8) { --d: 0.88s; }
+
+.tl-group--a { --d: 0.05s; }
+.tl-group--b { --d: 0.15s; }
+.tl-deliv-item--1 { --d: 0.50s; }
+.tl-deliv-item--2 { --d: 0.58s; }
+.tl-deliv-item--3 { --d: 0.66s; }
+.tl-deliv-item--4 { --d: 0.74s; }
+.tl-final { --d: 0.86s; }
+.tl-phase--1 { --d: 0.62s; }
+.tl-phase--2 { --d: 0.70s; }
+.tl-phase--3 { --d: 0.78s; }
+.tl-phase--4 { --d: 0.86s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .method .tl-reveal,
+  .method .tl-step,
+  .method .tl-dot,
+  .method.js-reveal .tl-reveal,
+  .method.js-reveal .tl-step,
+  .method.js-reveal .tl-dot {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .method.js-reveal .tl-axis::before {
+    transform: scaleX(1);
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   Slides — esteira infinita em 3 faixas
+   ========================================================================== */
+.slides {
+  --slides-h: clamp(104px, 14vw, 215px);
+  --slides-fade: clamp(28px, 7vw, 140px);
+  width: 100%;
+  background-color: #101010;
+  overflow: hidden;
+  user-select: none;
+}
+
+.slides-row {
+  display: flex;
+  overflow: hidden;
+  /* A máscara vai nas faixas, não na seção: assim as imagens somem
+     e o fundo escuro da seção continua inteiro por trás. */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--slides-fade),
+    #000 calc(100% - var(--slides-fade)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--slides-fade),
+    #000 calc(100% - var(--slides-fade)),
+    transparent 100%
+  );
+}
+
+.slides-track {
+  display: flex;
+  flex: none;
+  width: max-content;
+  animation: slides-scroll var(--dur) linear infinite;
+  will-change: transform;
+}
+
+/* Sentidos alternados: 1 e 3 para a esquerda, 2 para a direita */
+.slides-row--reverse .slides-track {
+  animation-direction: reverse;
+}
+
+.slides-row--1 .slides-track { --dur: 70s; }
+.slides-row--2 .slides-track { --dur: 84s; }
+.slides-row--3 .slides-track { --dur: 76s; }
+
+.slides-item {
+  flex: none;
+  width: calc(var(--slides-h) * 16 / 9);
+  height: var(--slides-h);
+}
+
+.slides-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes slides-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slides-track {
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Slides — caixa de seleção
+   Tudo em P&B e apagado; a caixa acende uma imagem por vez e vai pulando.
+   O estado apagado só entra com .is-spotlight (ligada pelo JS), então
+   sem JS a esteira aparece colorida e inteira em vez de ficar escura.
+   -------------------------------------------------------------------------- */
+.slides-item {
+  position: relative;
+}
+
+.slides.is-spotlight .slides-item img {
+  filter: grayscale(1);
+  opacity: 0.28;
+  transition: filter 0.45s ease, opacity 0.45s ease;
+}
+
+.slides.is-spotlight .slides-item.is-lit img {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+/* acima das vizinhas, senão a imagem seguinte cobre a borda da moldura */
+.slides.is-spotlight .slides-item.is-lit {
+  z-index: 2;
+}
+
+/* moldura */
+.slides.is-spotlight .slides-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--color-bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* alças nos quatro cantos */
+.slides.is-spotlight .slides-item::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  background:
+    linear-gradient(var(--color-bg), var(--color-bg)) 0 0 / 7px 7px no-repeat,
+    linear-gradient(var(--color-bg), var(--color-bg)) 100% 0 / 7px 7px no-repeat,
+    linear-gradient(var(--color-bg), var(--color-bg)) 0 100% / 7px 7px no-repeat,
+    linear-gradient(var(--color-bg), var(--color-bg)) 100% 100% / 7px 7px no-repeat;
+}
+
+.slides.is-spotlight .slides-item.is-lit::after,
+.slides.is-spotlight .slides-item.is-lit::before {
+  opacity: 1;
+}
