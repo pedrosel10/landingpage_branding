@@ -1,4 +1,9 @@
-# Cache
+# branding-cache
+#
+# Este bloco é ANEXADO ao .htaccess que já existe em public_html, nunca
+# copiado por cima dele: o cPanel costuma manter ali o handler da versão do
+# PHP, e sobrescrever isso derruba o enviar.php e o /admin. A marca na
+# primeira linha é o que o deploy procura para não anexar duas vezes.
 #
 # O HTML aponta para style.css?v=N e main.js?v=N. Se o navegador guardar o
 # HTML, ele nunca fica sabendo que o N mudou, e o site inteiro continua

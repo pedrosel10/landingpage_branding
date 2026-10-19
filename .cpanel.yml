@@ -3,6 +3,8 @@ deployment:
   tasks:
     - export DEPLOYPATH=$HOME/public_html
     - /bin/cp -R * $DEPLOYPATH
-    # O * do shell não pega nomes começados com ponto, então o .htaccess
-    # precisa vir numa linha só dele, senão a regra de cache nunca sobe.
-    - /bin/cp .htaccess $DEPLOYPATH
+    # Regra de cache: anexada uma única vez ao .htaccess que já está lá.
+    # Copiar por cima não serve — o cPanel guarda o handler do PHP nesse
+    # mesmo arquivo. E o * acima não pega nomes com ponto, por isso a
+    # origem precisa ser nomeada na mão.
+    - /bin/grep -q branding-cache $DEPLOYPATH/.htaccess 2>/dev/null || /bin/cat .htaccess-cache >> $DEPLOYPATH/.htaccess
