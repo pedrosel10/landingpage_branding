@@ -44,8 +44,24 @@ function initJourney() {
 
   let scenes = [];
   let total = 1;
-  let top = 0;
   let span = 1;
+  let vu = 0;        // altura de referência, em pixels, congelada
+  let larguraVu = 0; // largura em que essa altura foi medida
+
+  // No navegador do Instagram (e no Safari, e no Chrome do Android) a barra
+  // some e volta quando o scroll muda de sentido. Isso muda a altura da
+  // viewport no meio do gesto: se a jornada fosse medida em vh, a página
+  // inteira mudaria de tamanho e a cena pularia. Então a altura é medida
+  // uma vez, em pixels, e só é refeita quando a LARGURA muda — o que
+  // acontece ao girar o aparelho, e não ao esconder a barra nem ao abrir
+  // o teclado.
+  function medirVu() {
+    if (window.innerWidth === larguraVu) return false;
+    larguraVu = window.innerWidth;
+    vu = window.innerHeight;
+    document.documentElement.style.setProperty('--vu', vu + 'px');
+    return true;
+  }
 
   // Monta a lista de cenas válidas para a largura atual e reparte o relógio
   function layout() {
@@ -86,14 +102,16 @@ function initJourney() {
     measure();
   }
 
-  // O palco não rola: o que não couber na altura dele encolhe até caber
+  // O palco não rola: o que não couber na altura dele encolhe até caber.
+  // A conta usa vu, a altura com a barra do navegador à mostra — a menor
+  // que a tela pode ter. Assim o que coube continua cabendo quando a barra
+  // aparece de novo.
   function fit() {
     scenes.forEach(s => {
       if (!s.inner) return;
       s.inner.style.setProperty('--fit', '1');
       const cs = getComputedStyle(s.el);
-      const avail = s.el.clientHeight
-        - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      const avail = vu - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
       const h = s.inner.scrollHeight;
       const k = (h > avail && h > 0) ? Math.max(avail / h, s.fitMin) : 1;
       s.inner.style.setProperty('--fit', k.toFixed(3));
@@ -101,8 +119,7 @@ function initJourney() {
   }
 
   function measure() {
-    top = journey.getBoundingClientRect().top + window.scrollY;
-    span = Math.max(journey.offsetHeight - stage.offsetHeight, 1);
+    span = Math.max(journey.offsetHeight - vu, 1);
   }
 
   function smooth(t) {
@@ -130,7 +147,11 @@ function initJourney() {
   }
 
   function update() {
-    let p = (window.scrollY - top) / span;
+    // O avanço vem de onde a seção está NA TELA agora, não de scrollY menos
+    // uma posição guardada. Quando o navegador esconde a barra ele mexe na
+    // altura e às vezes no próprio scrollY; a posição na tela continua
+    // dizendo a verdade, então a cena não pula.
+    let p = -journey.getBoundingClientRect().top / span;
     if (p < -0.4) p = -0.4;
     if (p > 1.4) p = 1.4;
 
@@ -184,15 +205,19 @@ function initJourney() {
     });
   }
 
+  // Só refaz as contas quando a largura muda. Esconder a barra, girar a
+  // rolagem ou abrir o teclado disparam resize sem mudar a largura, e
+  // refazer o layout nessas horas é justamente o que fazia a página pular.
   let resizeTimer = 0;
   function onResize() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      layout();
+      if (medirVu()) layout();
       update();
     }, 140);
   }
 
+  medirVu();
   layout();
   update();
 
@@ -202,7 +227,7 @@ function initJourney() {
 
   // As medidas mudam quando as fontes do projeto substituem as de fallback
   if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(() => { layout(); update(); });
+    document.fonts.ready.then(() => { fit(); measure(); update(); });
   }
 }
 

@@ -17,6 +17,13 @@
 
 /* CSS Variables */
 :root {
+  /* Altura de referência da jornada. O JS congela isso em pixels: no
+     navegador do Instagram (e no Safari) a barra some e volta quando o
+     scroll muda de sentido, e qualquer medida em vh/svh mudaria junto,
+     reposicionando a página inteira no meio do gesto. 100svh é só o valor
+     de partida, para a página funcionar sem JS. */
+  --vu: 100svh;
+
   --color-bg: #E8FFA3;
   --color-dark: #181818;
   --color-white: #FFFFFF;
@@ -979,13 +986,18 @@ body {
 
 /* ---- Modo jornada ---- */
 .journey.js-journey {
-  height: calc(var(--journey-len, 7) * 100svh);
+  height: calc(var(--journey-len, 7) * var(--vu));
 }
 
+/* O palco acompanha a viewport visível (dvh), senão, com a barra do
+   navegador escondida, sobraria uma faixa sob o painel claro do contato.
+   Ele pode mudar de altura à vontade: o avanço da jornada não é medido
+   por ele, e sim pela posição da seção na tela. */
 .journey.js-journey .journey-stage {
   position: sticky;
   top: 0;
   height: 100svh;
+  height: 100dvh;
   overflow: hidden;
 }
 
@@ -995,7 +1007,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(28px, 7vh, 72px) clamp(20px, 4vw, 64px);
+  padding: clamp(28px, calc(var(--vu) * 0.07), 72px) clamp(20px, 4vw, 64px);
   opacity: 0;
   visibility: hidden;
   will-change: opacity, transform;
@@ -1033,8 +1045,8 @@ body {
   right: clamp(14px, 2.2vw, 34px);
   top: 50%;
   width: 1px;
-  height: clamp(84px, 15vh, 160px);
-  margin-top: calc(clamp(84px, 15vh, 160px) / -2);
+  height: clamp(84px, calc(var(--vu) * 0.15), 160px);
+  margin-top: calc(clamp(84px, calc(var(--vu) * 0.15), 160px) / -2);
   background-color: var(--tl-line-soft);
 }
 
