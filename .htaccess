@@ -1,0 +1,26 @@
+# Cache
+#
+# O HTML aponta para style.css?v=N e main.js?v=N. Se o navegador guardar o
+# HTML, ele nunca fica sabendo que o N mudou, e o site inteiro continua
+# velho mesmo com o deploy novo no ar — foi exatamente o que aconteceu.
+# Sem nenhum header de cache o servidor deixa o navegador decidir, e ele
+# decide guardar.
+#
+# Então: HTML, CSS e JS são sempre revalidados. Isso não baixa o arquivo de
+# novo a cada visita — o navegador pergunta e o servidor responde 304 quando
+# nada mudou. Só imagem e fonte, que são pesadas e quase nunca trocam,
+# ficam guardadas de verdade.
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|php)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  <FilesMatch "\.(webp|png|jpe?g|gif|svg|ico|otf|ttf|woff2?)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>

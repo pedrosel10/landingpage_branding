@@ -3,3 +3,6 @@ deployment:
   tasks:
     - export DEPLOYPATH=$HOME/public_html
     - /bin/cp -R * $DEPLOYPATH
+    # O * do shell não pega nomes começados com ponto, então o .htaccess
+    # precisa vir numa linha só dele, senão a regra de cache nunca sobe.
+    - /bin/cp .htaccess $DEPLOYPATH
