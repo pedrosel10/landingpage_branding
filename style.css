@@ -52,7 +52,17 @@ body {
   background-color: var(--color-bg);
   color: var(--color-dark);
   font-family: var(--font-sans);
+}
+
+/* O corte horizontal fica no html: overflow-x hidden no body faria dele uma
+   caixa de rolagem, e aí o palco sticky da jornada nunca gruda. clip corta
+   sem criar caixa de rolagem; onde ele não existir, o html já resolve. */
+html {
   overflow-x: hidden;
+}
+
+body {
+  overflow-x: clip;
 }
 
 /* Hero Section */
@@ -84,6 +94,15 @@ body {
   margin: 0 auto;
 }
 
+/* Logo acima do título */
+.hero-logo {
+  display: block;
+  width: clamp(42px, 3.8vw, 62px);
+  height: auto;
+  margin-bottom: clamp(18px, 2.6vh, 30px);
+  user-select: none;
+}
+
 /* Headline */
 .hero-title {
   font-family: var(--font-serif);
@@ -113,10 +132,90 @@ body {
   text-wrap: balance;
 }
 
-/* CTA Button */
-.hero-cta-wrapper {
-  margin-top: clamp(21px, 2.9vh, 32px);
+/* Indicador de scroll — trilho fino com um traço descendo até um ponto,
+   o mesmo vocabulário de linha + nó da linha do tempo */
+.hero-scroll {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: clamp(24px, 3.4vh, 38px);
+  padding: 6px 12px;
+  text-decoration: none;
+  color: var(--color-dark);
+  -webkit-tap-highlight-color: transparent;
 }
+
+.hero-scroll-rail {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: clamp(36px, 5vh, 52px);
+  background-color: rgba(24, 24, 24, 0.18);
+  overflow: hidden;
+}
+
+.hero-scroll-line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 42%;
+  background-color: var(--color-dark);
+  transform: translateY(-100%);
+  animation: hero-scroll-line 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+.hero-scroll-dot {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--color-dark);
+  opacity: 0.35;
+  animation: hero-scroll-dot 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+.hero-scroll:hover .hero-scroll-rail {
+  background-color: rgba(24, 24, 24, 0.32);
+}
+
+.hero-scroll:focus-visible {
+  outline: 1px solid var(--color-dark);
+  outline-offset: 4px;
+}
+
+/* O traço atravessa o trilho e sai por baixo (42% × 238% ≈ 100%) */
+@keyframes hero-scroll-line {
+  0% { transform: translateY(-100%); }
+  70%, 100% { transform: translateY(238%); }
+}
+
+/* O ponto acende quando o traço chega nele */
+@keyframes hero-scroll-dot {
+  0%, 52% { opacity: 0.35; transform: scale(1); }
+  66% { opacity: 1; transform: scale(1.5); }
+  86%, 100% { opacity: 0.35; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-line,
+  .hero-scroll-dot {
+    animation: none;
+  }
+
+  .hero-scroll-line {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* CTA Button */
 
 .hero-btn {
   display: inline-flex;
@@ -296,7 +395,10 @@ body {
   align-items: flex-end;
   pointer-events: none;
   z-index: 1;
-  margin-top: clamp(0px, 1.5vh, 20px);
+  /* A foto tem ~14.8% de área transparente acima do cabelo. Puxa o
+     container para cima nessa proporção da altura dela, deixando ~36px
+     visíveis entre o indicador de scroll e o topo do cabelo. */
+  margin-top: calc(36px - 0.148 * clamp(600px, 78vh, 980px));
   margin-bottom: 0;
   line-height: 0;
 }
@@ -325,6 +427,11 @@ body {
   }
 }
 
+.hero-logo {
+  opacity: 0;
+  animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 .hero-title {
   animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -334,9 +441,9 @@ body {
   animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
 }
 
-.hero-cta-wrapper {
+.hero-scroll {
   opacity: 0;
-  animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+  animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
 }
 
 .hero-person-img {
@@ -356,6 +463,11 @@ body {
     padding-inline: 16px;
   }
 
+  .hero-logo {
+    width: clamp(40px, 11vw, 50px);
+    margin-bottom: clamp(16px, 4.5vw, 22px);
+  }
+
   .hero-title {
     font-size: clamp(3.3rem, 12.4vw, 4.7rem);
     line-height: 1.05;
@@ -367,8 +479,8 @@ body {
     margin-top: clamp(12px, 3vw, 16px);
   }
 
-  .hero-cta-wrapper {
-    margin-top: clamp(14px, 3.5vw, 20px);
+  .hero-scroll {
+    margin-top: clamp(16px, 4.5vw, 24px);
   }
 
   .hero-btn {
@@ -383,7 +495,8 @@ body {
     transform: none;
     width: 100%;
     height: clamp(380px, 110vw, 540px);
-    margin-top: -10px;
+    /* mesma compensação do desktop: ~22px visíveis até o topo do cabelo */
+    margin-top: calc(22px - 0.148 * clamp(380px, 110vw, 540px));
   }
 
   .hero-person-img {
@@ -408,6 +521,7 @@ body {
 
   .hero-image-container {
     height: 420px;
+    margin-top: calc(22px - 0.148 * 420px);
   }
 }
 
@@ -425,12 +539,13 @@ body {
     margin-top: 6px;
   }
 
-  .hero-cta-wrapper {
+  .hero-scroll {
     margin-top: 8px;
   }
 
   .hero-image-container {
     height: 360px;
+    margin-top: calc(22px - 0.148 * 360px);
   }
 }
 
@@ -488,6 +603,8 @@ body {
   overflow: hidden;
 }
 
+/* Só dois slides ficam visíveis por card: o que entra (.active, por cima)
+   e o que sai (.is-leaving, por baixo, recuando até ser coberto) */
 .card-slide {
   position: absolute;
   inset: 0;
@@ -495,21 +612,126 @@ body {
   height: 100%;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.85s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 1.1s cubic-bezier(0.4, 0, 0.2, 1),
-    visibility 0.85s ease;
-  transform: scale(1.04);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
+  z-index: 0;
+  overflow: hidden;
 }
 
 .card-slide.active {
   opacity: 1;
   visibility: visible;
-  transform: scale(1);
   z-index: 2;
+}
+
+.card-slide.is-leaving {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+
+/* Véu que escurece o slide que está saindo */
+.card-slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-color: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---- Entrada: cortina + zoom que assenta + logo que sobe do desfoque ---- */
+.card-slide.is-entering {
+  animation: card-wipe-up 0.95s cubic-bezier(0.77, 0, 0.175, 1) both;
+}
+
+/* Cards alternados abrem a cortina no sentido contrário: xadrez no grid */
+.grid-card:nth-child(even) .card-slide.is-entering {
+  animation-name: card-wipe-down;
+}
+
+.card-slide.is-entering .slide-bg {
+  animation: card-bg-settle 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.card-slide.is-entering .slide-logo-wrapper {
+  animation: card-logo-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.38s both;
+}
+
+/* ---- Saída: recua, escurece e a logo sobe sumindo ---- */
+.card-slide.is-leaving .slide-bg {
+  animation: card-bg-recede 0.95s cubic-bezier(0.77, 0, 0.175, 1) both;
+}
+
+.card-slide.is-leaving::after {
+  animation: card-veil 0.95s cubic-bezier(0.77, 0, 0.175, 1) both;
+}
+
+.card-slide.is-leaving .slide-logo-wrapper {
+  animation: card-logo-out 0.5s cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+
+@keyframes card-wipe-up {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes card-wipe-down {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes card-bg-settle {
+  from { transform: scale(1.28); }
+  to { transform: scale(1); }
+}
+
+@keyframes card-bg-recede {
+  from { transform: scale(1); }
+  to { transform: scale(1.12); }
+}
+
+@keyframes card-veil {
+  from { opacity: 0; }
+  to { opacity: 0.65; }
+}
+
+@keyframes card-logo-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes card-logo-out {
+  to {
+    opacity: 0;
+    transform: translateY(-16px);
+    filter: blur(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-slide.is-entering,
+  .card-slide.is-entering .slide-bg,
+  .card-slide.is-entering .slide-logo-wrapper,
+  .card-slide.is-leaving .slide-bg,
+  .card-slide.is-leaving::after,
+  .card-slide.is-leaving .slide-logo-wrapper {
+    animation: none;
+  }
+
+  .card-slide.is-leaving {
+    visibility: hidden;
+  }
 }
 
 .slide-bg {
@@ -704,10 +926,10 @@ body {
   }
 }
 
-/* Mobile: 3 rows x 4 cols = 12 cards (hiding ANDERSON and SOBERANA) */
+/* Mobile: 4 rows x 3 cols = 12 cards (hiding ANDERSON and SOBERANA) */
 @media (max-width: 768px) {
   .branding-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .grid-card[data-brand="ANDERSON"],
@@ -715,10 +937,14 @@ body {
     display: none !important;
   }
 }
+
 /* ==========================================================================
-   Método — Linha do Tempo
+   Jornada — palco fixo e cenas que aparecem no centro
+   O JS escreve um único número por cena, --p (0 a 1, o avanço daquela cena).
+   Tudo o que aparece deriva dele em CSS, então o scroll não dispara layout.
+   Sem JS a seção vira um empilhamento normal, com todo o conteúdo visível.
    ========================================================================== */
-.method {
+.journey {
   --tl-text: #F2F0EA;
   --tl-muted: rgba(242, 240, 234, 0.46);
   --tl-line: rgba(242, 240, 234, 0.32);
@@ -730,7 +956,6 @@ body {
   background-color: #101010;
   color: var(--tl-text);
   font-family: var(--font-sans);
-  padding: clamp(72px, 9vw, 132px) clamp(20px, 4vw, 64px) clamp(84px, 10vw, 148px);
   user-select: none;
 }
 
@@ -741,29 +966,178 @@ body {
   overflow: hidden;
 }
 
-.method-inner {
+/* ---- Modo empilhado (sem JS / movimento reduzido) ---- */
+.scene {
+  padding: clamp(72px, 11vh, 150px) clamp(20px, 4vw, 64px);
+}
+
+.scene-inner {
   max-width: 1320px;
   margin: 0 auto;
-}
-
-/* Cabeçalho */
-.method-head {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   text-align: center;
-  gap: clamp(12px, 1.5vw, 20px);
-  margin-bottom: clamp(48px, 6.5vw, 96px);
 }
 
-.method-title {
+/* ---- Modo jornada ---- */
+.journey.js-journey {
+  height: calc(var(--journey-len, 7) * 100svh);
+}
+
+.journey.js-journey .journey-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.journey.js-journey .scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(28px, 7vh, 72px) clamp(20px, 4vw, 64px);
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity, transform;
+}
+
+.journey.js-journey .scene.is-on {
+  visibility: visible;
+}
+
+.scene[hidden] {
+  display: none;
+}
+
+/* A cena encolhe se o conteúdo não couber na altura do palco (telas baixas) */
+.journey.js-journey .scene-inner {
+  width: 100%;
+  transform: scale(var(--fit, 1));
+  transform-origin: center center;
+}
+
+/* Trilho de avanço da jornada. Em tela estreita o texto ocupa a largura
+   inteira e ele encostaria nas linhas, então só aparece no layout largo. */
+.journey-rail {
+  display: none;
+}
+
+@media (min-width: 981px) {
+  .journey.js-journey .journey-rail {
+    display: block;
+  }
+}
+
+.journey.js-journey .journey-rail {
+  position: absolute;
+  right: clamp(14px, 2.2vw, 34px);
+  top: 50%;
+  width: 1px;
+  height: clamp(84px, 15vh, 160px);
+  margin-top: calc(clamp(84px, 15vh, 160px) / -2);
+  background-color: var(--tl-line-soft);
+}
+
+.journey-rail-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: calc(var(--jp, 0) * 100%);
+  background-color: var(--tl-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Aparecimento — um elemento por limiar (--at) sobre o avanço da cena (--p)
+   --sp = quão rápido ele completa; --rise = de quanto abaixo ele sobe
+   -------------------------------------------------------------------------- */
+.scene .rv {
+  --r: clamp(0, calc((var(--p, 1) - var(--at, 0)) * var(--sp, 11)), 1);
+  opacity: var(--r);
+  transform: translate3d(0, calc((1 - var(--r)) * var(--rise, 14px)), 0);
+}
+
+/* --------------------------------------------------------------------------
+   Texto que acende palavra por palavra conforme o scroll avança
+   --lit é a posição da onda na frase; cada palavra acende quando ela passa.
+   -------------------------------------------------------------------------- */
+.scene-words {
+  --lit: calc((var(--p, 1) - 0.02) / 0.60 * (var(--n, 1) + 2));
+}
+
+.scene-words .w {
+  opacity: clamp(0.15, calc((var(--lit) - var(--i, 0)) * 1.4), 1);
+}
+
+.scene-keep {
+  white-space: nowrap;
+}
+
+.scene-reg {
+  font-size: 0.6em;
+  vertical-align: 0.55em;
+  letter-spacing: 0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   Cenas de texto
+   -------------------------------------------------------------------------- */
+.scene-title {
   font-family: var(--font-serif);
   font-weight: 400;
-  text-transform: uppercase;
-  font-size: clamp(2.3rem, 5.4vw, 5rem);
-  line-height: 1;
-  letter-spacing: 0.005em;
+  font-size: clamp(2.2rem, 4.4vw, 4.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--tl-accent);
+  max-width: calc(12.4 * clamp(2.2rem, 4.4vw, 4.4rem));
+  margin-inline: auto;
   text-wrap: balance;
+}
+
+.scene-title em {
+  font-style: italic;
+}
+
+.scene-sub {
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 1.15vw, 1.25rem);
+  letter-spacing: -0.01em;
+  color: var(--tl-text);
+  margin-top: clamp(18px, 2.4vw, 32px);
+}
+
+.scene-body {
+  max-width: 780px;
+  margin-inline: auto;
+  font-family: var(--font-sans);
+  font-size: clamp(1.05rem, 1.45vw, 1.55rem);
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  color: var(--tl-text);
+  text-wrap: balance;
+}
+
+@media (max-width: 980px) {
+  .scene-title {
+    font-size: clamp(2.6rem, 9.6vw, 4.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    max-width: none;
+  }
+
+  .scene-sub {
+    font-size: clamp(0.9rem, 3.4vw, 1.05rem);
+  }
+
+  .scene-body {
+    font-size: clamp(1rem, 4.2vw, 1.25rem);
+  }
+}
+
+@media (max-width: 380px) {
+  .scene-title {
+    font-size: 10.6vw;
+  }
 }
 
 /* Setas / ornamentos (SVG) */
@@ -776,17 +1150,13 @@ body {
   display: block;
 }
 
-.tl-arrow--head {
-  width: clamp(34px, 3.4vw, 48px);
-  height: clamp(11px, 1.1vw, 15px);
-  color: var(--tl-text);
-}
-
 /* --------------------------------------------------------------------------
-   Desktop — percurso horizontal (8 marcos em 8 colunas iguais)
+   Linha do tempo — percurso horizontal (8 marcos em 8 colunas iguais)
    Os nós ficam no centro de cada coluna: 6.25%, 18.75% ... 93.75%
+   O eixo é desenhado por --fill, a mesma conta que define os limiares dos nós.
    -------------------------------------------------------------------------- */
 .tl--desktop {
+  --fill: clamp(0, calc((var(--p, 1) - 0.06) / 0.62), 1);
   display: none;
   position: relative;
 }
@@ -813,11 +1183,13 @@ body {
 .tl-group--a {
   grid-column: 1 / 6;
   --span: 5;
+  --at: 0.04;
 }
 
 .tl-group--b {
   grid-column: 5 / 9;
   --span: 4;
+  --at: 0.45;
 }
 
 .tl-group-label {
@@ -913,6 +1285,8 @@ body {
   height: 1.5px;
   margin-top: -0.75px;
   background-color: var(--tl-text);
+  transform: scaleX(var(--fill, 1));
+  transform-origin: left center;
 }
 
 .tl-dot {
@@ -929,7 +1303,24 @@ body {
   background-color: var(--tl-accent);
 }
 
-/* Ornamento: a logo é usada como máscara, então a cor vem do CSS */
+/* Os nós e seus rótulos acendem na mesma ordem em que a linha os alcança:
+   0.06 no primeiro, 0.68 no último, um vão de 0.62/7 entre eles. */
+.tl-steps .tl-step:nth-child(1), .tl-axis .tl-dot:nth-child(1) { --at: 0.060; }
+.tl-steps .tl-step:nth-child(2), .tl-axis .tl-dot:nth-child(2) { --at: 0.149; }
+.tl-steps .tl-step:nth-child(3), .tl-axis .tl-dot:nth-child(3) { --at: 0.237; }
+.tl-steps .tl-step:nth-child(4), .tl-axis .tl-dot:nth-child(4) { --at: 0.326; }
+.tl-steps .tl-step:nth-child(5), .tl-axis .tl-dot:nth-child(5) { --at: 0.414; }
+.tl-steps .tl-step:nth-child(6), .tl-axis .tl-dot:nth-child(6) { --at: 0.503; }
+.tl-steps .tl-step:nth-child(7), .tl-axis .tl-dot:nth-child(7) { --at: 0.591; }
+.tl-steps .tl-step:nth-child(8), .tl-axis .tl-dot:nth-child(8) { --at: 0.680; }
+
+.tl-axis .tl-dot {
+  --rise: 0px;
+  --sp: 18;
+}
+
+/* Ornamento: a logo é usada como máscara, então a cor vem do CSS.
+   Ele tem transform próprio, por isso só a opacidade responde ao avanço. */
 .tl-ornament,
 .tl-m-ornament {
   background-color: var(--tl-accent);
@@ -943,14 +1334,17 @@ body {
   width: clamp(24px, 2.8vw, 40px);
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
+  opacity: clamp(0, calc((var(--p, 1) - var(--at, 0)) * 11), 1);
 }
 
 .tl-ornament--left {
   left: 0;
+  --at: 0.02;
 }
 
 .tl-ornament--right {
   left: 100%;
+  --at: 0.68;
 }
 
 /* Entregas */
@@ -974,18 +1368,20 @@ body {
   line-height: 1.45;
 }
 
-.tl-deliv-item--1 { grid-column: 1 / 3; }
-.tl-deliv-item--2 { grid-column: 3 / 5; }
-.tl-deliv-item--3 { grid-column: 5 / 6; }
+.tl-deliv-item--1 { grid-column: 1 / 3; --at: 0.20; }
+.tl-deliv-item--2 { grid-column: 3 / 5; --at: 0.38; }
+.tl-deliv-item--3 { grid-column: 5 / 6; --at: 0.52; }
 
 .tl-deliv-item--4 {
   grid-column: 6 / 7;
   border-right: 1px dashed var(--tl-line-soft);
+  --at: 0.61;
 }
 
 /* Entrega final (sob o último nó) */
 .tl-final {
   --tl-final-w: clamp(148px, 14vw, 196px);
+  --at: 0.72;
   position: absolute;
   top: 0;
   /* centrado sob o último nó (93.75%) sem usar transform — o reveal usa transform */
@@ -1029,10 +1425,10 @@ body {
   color: var(--tl-muted);
 }
 
-.tl-phase--1 { grid-column: 1 / 3; }
-.tl-phase--2 { grid-column: 3 / 5; }
-.tl-phase--3 { grid-column: 5 / 7; }
-.tl-phase--4 { grid-column: 7 / 8; }
+.tl-phase--1 { grid-column: 1 / 3; --at: 0.22; }
+.tl-phase--2 { grid-column: 3 / 5; --at: 0.40; }
+.tl-phase--3 { grid-column: 5 / 7; --at: 0.54; }
+.tl-phase--4 { grid-column: 7 / 8; --at: 0.64; }
 
 .tl-phase-rule {
   position: absolute;
@@ -1057,9 +1453,10 @@ body {
 .tl-phase-rule::after { right: 0; }
 
 /* --------------------------------------------------------------------------
-   Mobile / Tablet — percurso vertical centralizado
+   Linha do tempo — percurso vertical centralizado (telas estreitas)
    O trilho é a soma dos conectores desenhados no topo de cada bloco,
-   então a linha nunca cruza um texto.
+   então a linha nunca cruza um texto. Os limiares (--at) de cada bloco são
+   distribuídos pelo JS, na ordem em que eles aparecem.
    -------------------------------------------------------------------------- */
 .tl--mobile {
   --tl-dot: 9px;
@@ -1093,17 +1490,26 @@ body {
   background-color: var(--tl-line-soft);
 }
 
+/* O primeiro bloco da segunda metade não vem de lugar nenhum */
+.tl-m-group--first::before {
+  display: none;
+}
+
+.tl-m-group--first {
+  padding-top: 0;
+}
+
 /* Grupos — divisor com réguas laterais */
 .tl-m-group {
-  --c: clamp(34px, 9vw, 46px);
+  --c: clamp(28px, 7vw, 40px);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: clamp(12px, 3.5vw, 18px);
-  padding-top: calc(var(--c) + clamp(14px, 4vw, 20px));
+  padding-top: calc(var(--c) + clamp(12px, 3.4vw, 18px));
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: clamp(1.35rem, 5.4vw, 1.85rem);
+  font-size: clamp(1.3rem, 5.2vw, 1.8rem);
   line-height: 1.15;
 }
 
@@ -1126,20 +1532,20 @@ body {
 
 /* Fases */
 .tl-m-phase {
-  --c: clamp(26px, 7vw, 36px);
-  padding-top: calc(var(--c) + clamp(12px, 3.4vw, 16px));
+  --c: clamp(20px, 5.4vw, 30px);
+  padding-top: calc(var(--c) + clamp(10px, 2.8vw, 14px));
   font-family: var(--font-serif);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-size: clamp(0.82rem, 3.4vw, 0.98rem);
+  font-size: clamp(0.8rem, 3.3vw, 0.95rem);
   color: var(--tl-muted);
 }
 
 /* Marcos */
 .tl-m-step {
-  --c: clamp(20px, 5vw, 26px);
-  padding-top: calc(var(--c) + var(--tl-dot) + clamp(11px, 3vw, 14px));
-  font-size: clamp(0.8rem, 3.4vw, 0.9rem);
+  --c: clamp(15px, 4vw, 22px);
+  padding-top: calc(var(--c) + var(--tl-dot) + clamp(9px, 2.5vw, 12px));
+  font-size: clamp(0.78rem, 3.3vw, 0.88rem);
   text-transform: uppercase;
   letter-spacing: 0.09em;
 }
@@ -1166,13 +1572,13 @@ body {
 
 /* Entregas */
 .tl-m-deliv {
-  --c: clamp(20px, 5.5vw, 28px);
+  --c: clamp(15px, 4.4vw, 24px);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: clamp(11px, 3.2vw, 16px);
-  padding-top: calc(var(--c) + clamp(11px, 3vw, 15px));
-  font-size: clamp(0.95rem, 3.9vw, 1.08rem);
+  padding-top: calc(var(--c) + clamp(9px, 2.6vw, 13px));
+  font-size: clamp(0.92rem, 3.8vw, 1.05rem);
   line-height: 1.4;
 }
 
@@ -1180,8 +1586,8 @@ body {
 .tl-m-final-arrow {
   display: block;
   width: 12px;
-  height: clamp(40px, 10vw, 54px);
-  margin: clamp(12px, 3.4vw, 16px) auto 0;
+  height: clamp(32px, 8vw, 46px);
+  margin: clamp(10px, 3vw, 14px) auto 0;
   color: var(--tl-accent);
 }
 
@@ -1189,27 +1595,23 @@ body {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: clamp(7px, 2vw, 10px);
-  margin-top: clamp(10px, 3vw, 14px);
+  gap: clamp(6px, 1.8vw, 9px);
+  margin-top: clamp(9px, 2.6vw, 12px);
   color: var(--tl-accent);
-  font-size: clamp(0.95rem, 3.9vw, 1.08rem);
+  font-size: clamp(0.92rem, 3.8vw, 1.05rem);
   line-height: 1.35;
 }
 
 /* Ornamentos nas pontas do percurso */
 .tl-m-ornament {
   display: block;
-  width: clamp(24px, 6.5vw, 30px);
+  width: clamp(22px, 6vw, 28px);
   aspect-ratio: 1;
-  margin: 0 auto;
-}
-
-.tl-m-ornament--end {
-  margin-top: clamp(34px, 9vw, 46px);
+  margin: 0 auto clamp(2px, 1vw, 6px);
 }
 
 /* --------------------------------------------------------------------------
-   Troca de layout
+   Troca de layout da linha do tempo
    -------------------------------------------------------------------------- */
 @media (min-width: 981px) {
   .tl--desktop { display: block; }
@@ -1217,211 +1619,229 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   Reveal no scroll
+   Movimento reduzido — sem palco fixo, tudo visível
    -------------------------------------------------------------------------- */
-/* O estado inicial só é aplicado quando o JS marca .js-reveal —
-   sem JS a seção aparece completa. */
-.method .tl-reveal,
-.method .tl-step,
-.method .tl-dot {
-  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s),
-    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
-}
-
-.method.js-reveal .tl-reveal {
-  opacity: 0;
-  transform: translateY(16px);
-}
-
-.method.js-reveal .tl-step,
-.method.js-reveal .tl-dot {
-  opacity: 0;
-}
-
-.method.js-reveal.is-visible .tl-reveal,
-.method.js-reveal.is-visible .tl-step,
-.method.js-reveal.is-visible .tl-dot {
-  opacity: 1;
-  transform: none;
-}
-
-.method.js-reveal .tl-axis::before {
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.12s;
-}
-
-.method.js-reveal.is-visible .tl-axis::before {
-  transform: scaleX(1);
-}
-
-.tl-steps .tl-step:nth-child(1), .tl-axis .tl-dot:nth-child(1) { --d: 0.18s; }
-.tl-steps .tl-step:nth-child(2), .tl-axis .tl-dot:nth-child(2) { --d: 0.28s; }
-.tl-steps .tl-step:nth-child(3), .tl-axis .tl-dot:nth-child(3) { --d: 0.38s; }
-.tl-steps .tl-step:nth-child(4), .tl-axis .tl-dot:nth-child(4) { --d: 0.48s; }
-.tl-steps .tl-step:nth-child(5), .tl-axis .tl-dot:nth-child(5) { --d: 0.58s; }
-.tl-steps .tl-step:nth-child(6), .tl-axis .tl-dot:nth-child(6) { --d: 0.68s; }
-.tl-steps .tl-step:nth-child(7), .tl-axis .tl-dot:nth-child(7) { --d: 0.78s; }
-.tl-steps .tl-step:nth-child(8), .tl-axis .tl-dot:nth-child(8) { --d: 0.88s; }
-
-.tl-group--a { --d: 0.05s; }
-.tl-group--b { --d: 0.15s; }
-.tl-deliv-item--1 { --d: 0.50s; }
-.tl-deliv-item--2 { --d: 0.58s; }
-.tl-deliv-item--3 { --d: 0.66s; }
-.tl-deliv-item--4 { --d: 0.74s; }
-.tl-final { --d: 0.86s; }
-.tl-phase--1 { --d: 0.62s; }
-.tl-phase--2 { --d: 0.70s; }
-.tl-phase--3 { --d: 0.78s; }
-.tl-phase--4 { --d: 0.86s; }
-
 @media (prefers-reduced-motion: reduce) {
-  .method .tl-reveal,
-  .method .tl-step,
-  .method .tl-dot,
-  .method.js-reveal .tl-reveal,
-  .method.js-reveal .tl-step,
-  .method.js-reveal .tl-dot {
+  .scene .rv,
+  .scene-words .w,
+  .tl-ornament {
     opacity: 1;
     transform: none;
-    transition: none;
   }
 
-  .method.js-reveal .tl-axis::before {
+  .tl-axis::before {
     transform: scaleX(1);
-    transition: none;
   }
 }
 
 /* ==========================================================================
-   Slides — esteira infinita em 3 faixas
+   Contato — a última cena da jornada
+   Ela é a única cena de fundo claro: como o painel cobre o palco inteiro e
+   aparece junto com o conteúdo, é a própria cena que leva a tela do escuro
+   para o verde. Fora do modo jornada ela é só uma dobra verde comum.
    ========================================================================== */
-.slides {
-  --slides-h: clamp(104px, 14vw, 215px);
-  --slides-fade: clamp(28px, 7vw, 140px);
-  width: 100%;
-  background-color: #101010;
-  overflow: hidden;
-  user-select: none;
+.scene--form {
+  background-color: var(--color-bg);
+  color: var(--color-dark);
 }
 
-.slides-row {
+/* O painel sobe do pé da tela: a borda de cima do recorte desce de 100% a 0
+   conforme --wipe. Como ele é opaco, cobre a cena escura em vez de se
+   misturar com ela. Sem --wipe (sem JS) o recorte não existe. */
+.journey.js-journey .scene--form {
+  clip-path: inset(calc(var(--wipe, 0) * 100%) 0 0 0);
+}
+
+.scene--form .scene-inner {
+  max-width: 560px;
+  text-align: center;
+}
+
+.contato-kicker {
+  font-family: var(--font-sans);
+  font-size: clamp(0.7rem, 0.82vw, 0.78rem);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  opacity: 0.55;
+}
+
+.contato-title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 4vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin-top: clamp(12px, 1.6vw, 20px);
+  text-wrap: balance;
+}
+
+.contato-sub {
+  font-family: var(--font-sans);
+  font-size: clamp(0.92rem, 1.1vw, 1.1rem);
+  letter-spacing: -0.01em;
+  margin-top: clamp(8px, 1.2vw, 14px);
+  opacity: 0.7;
+}
+
+/* O limiar de cada campo vem do HTML, então a opacidade de .rv já cuida da
+   entrada; aqui o opacity do kicker e do sub precisa ser multiplicado por ela */
+.scene--form .contato-kicker,
+.scene--form .contato-sub {
+  opacity: calc(var(--r, 1) * 0.62);
+}
+
+.form {
+  margin-top: clamp(28px, 4vh, 52px);
   display: flex;
-  overflow: hidden;
-  /* A máscara vai nas faixas, não na seção: assim as imagens somem
-     e o fundo escuro da seção continua inteiro por trás. */
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 var(--slides-fade),
-    #000 calc(100% - var(--slides-fade)),
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 var(--slides-fade),
-    #000 calc(100% - var(--slides-fade)),
-    transparent 100%
-  );
+  flex-direction: column;
+  gap: clamp(16px, 2.4vh, 26px);
+  text-align: left;
 }
 
-.slides-track {
+.field {
   display: flex;
-  flex: none;
-  width: max-content;
-  animation: slides-scroll var(--dur) linear infinite;
-  will-change: transform;
+  flex-direction: column;
+  gap: 6px;
 }
 
-/* Sentidos alternados: 1 e 3 para a esquerda, 2 para a direita */
-.slides-row--reverse .slides-track {
-  animation-direction: reverse;
+.field label {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.6;
 }
 
-.slides-row--1 .slides-track { --dur: 70s; }
-.slides-row--2 .slides-track { --dur: 84s; }
-.slides-row--3 .slides-track { --dur: 76s; }
-
-.slides-item {
-  flex: none;
-  width: calc(var(--slides-h) * 16 / 9);
-  height: var(--slides-h);
+.field input {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.25vw, 1.15rem);
+  color: var(--color-dark);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(24, 24, 24, 0.28);
+  border-radius: 0;
+  padding: 5px 0 8px;
+  transition: border-color 0.35s ease;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-.slides-item img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.field input::placeholder {
+  color: rgba(24, 24, 24, 0.3);
 }
 
-@keyframes slides-scroll {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(-50%, 0, 0); }
+.field input:focus {
+  outline: none;
+  border-bottom-color: var(--color-dark);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .slides-track {
-    animation: none;
+.field.is-invalid input {
+  border-bottom-color: #B3261E;
+}
+
+.field.is-invalid label {
+  opacity: 1;
+  color: #B3261E;
+}
+
+/* Isca de robô: fora da tela, mas não display:none — há robô que ignora */
+.form-trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form-msg {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: #B3261E;
+  margin-top: -4px;
+}
+
+.form-msg a {
+  color: inherit;
+}
+
+.form-submit {
+  align-self: flex-start;
+  margin-top: clamp(4px, 1vh, 12px);
+}
+
+.form.is-sending .form-submit {
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+@media (max-width: 768px) {
+  .contato-title {
+    font-size: clamp(2.1rem, 8.4vw, 2.8rem);
+  }
+
+  .form-submit {
+    align-self: stretch;
+    justify-content: space-between;
   }
 }
 
-/* --------------------------------------------------------------------------
-   Slides — caixa de seleção
-   Tudo em P&B e apagado; a caixa acende uma imagem por vez e vai pulando.
-   O estado apagado só entra com .is-spotlight (ligada pelo JS), então
-   sem JS a esteira aparece colorida e inteira em vez de ficar escura.
-   -------------------------------------------------------------------------- */
-.slides-item {
-  position: relative;
+/* ==========================================================================
+   Obrigado — página de confirmação
+   ========================================================================== */
+.thanks {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(48px, 10vh, 120px) 20px;
+  background-color: var(--color-bg);
 }
 
-.slides.is-spotlight .slides-item img {
-  filter: grayscale(1);
-  opacity: 0.28;
-  transition: filter 0.45s ease, opacity 0.45s ease;
+.thanks-logo {
+  width: clamp(40px, 3.4vw, 56px);
+  height: auto;
+  margin-bottom: clamp(24px, 3.4vh, 38px);
 }
 
-.slides.is-spotlight .slides-item.is-lit img {
-  filter: grayscale(0);
-  opacity: 1;
+.thanks-title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 5.4vw, 4.4rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
 }
 
-/* acima das vizinhas, senão a imagem seguinte cobre a borda da moldura */
-.slides.is-spotlight .slides-item.is-lit {
-  z-index: 2;
+.thanks-sub {
+  font-family: var(--font-sans);
+  font-size: clamp(0.98rem, 1.2vw, 1.2rem);
+  line-height: 1.5;
+  max-width: 460px;
+  margin: clamp(16px, 2.2vh, 26px) auto 0;
+  text-wrap: balance;
 }
 
-/* moldura */
-.slides.is-spotlight .slides-item::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 1px solid var(--color-bg);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
+.thanks-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 22px);
+  margin-top: clamp(30px, 4.4vh, 50px);
 }
 
-/* alças nos quatro cantos */
-.slides.is-spotlight .slides-item::before {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  z-index: 1;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  background:
-    linear-gradient(var(--color-bg), var(--color-bg)) 0 0 / 7px 7px no-repeat,
-    linear-gradient(var(--color-bg), var(--color-bg)) 100% 0 / 7px 7px no-repeat,
-    linear-gradient(var(--color-bg), var(--color-bg)) 0 100% / 7px 7px no-repeat,
-    linear-gradient(var(--color-bg), var(--color-bg)) 100% 100% / 7px 7px no-repeat;
+.thanks-back {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--color-dark);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(24, 24, 24, 0.3);
+  padding-bottom: 2px;
+  transition: border-color 0.3s ease;
 }
 
-.slides.is-spotlight .slides-item.is-lit::after,
-.slides.is-spotlight .slides-item.is-lit::before {
-  opacity: 1;
+.thanks-back:hover {
+  border-bottom-color: var(--color-dark);
 }

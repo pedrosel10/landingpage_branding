@@ -7,42 +7,24 @@
   <meta name="description" content="E se existisse uma forma de aumentar seus resultados sem aumentar o investimento? Existe: ela se chama Branding.">
   <link rel="preload" href="PPEditorialNew-Regular.otf" as="font" type="font/otf" crossorigin>
   <link rel="preload" href="NeueMontreal-Regular.otf" as="font" type="font/otf" crossorigin>
-  <link rel="stylesheet" href="style.css?v=21">
+  <link rel="stylesheet" href="style.css?v=42">
 </head>
 <body>
   <main class="hero" id="hero">
     <div class="hero-content">
+      <img class="hero-logo" src="logo_escura.svg" alt="" aria-hidden="true" width="323" height="323" draggable="false">
       <h1 class="hero-title">
         <span>E se existisse uma forma de</span>
         <span>aumentar seus resultados sem</span>
         <span>aumentar o investimento?</span>
       </h1>
       <p class="hero-subtitle">Existe: ela se chama Branding.</p>
-      <div class="hero-cta-wrapper">
-        <a href="https://wa.me/5554991595375?text=Ol%C3%A1%2C+Pedro.+Vim+pelo+Instagram+e+gostaria+de+mais+informa%C3%A7%C3%B5es+sobre+a+cria%C3%A7%C3%A3o+de+marcas.+&utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer" class="hero-btn" id="btn-contato" aria-label="Entrar em contato">
-          <span class="btn-text-mask">
-            <span class="btn-text-track">
-              <span class="btn-text">Entrar em contato</span>
-              <span class="btn-text">Entrar em contato</span>
-            </span>
-          </span>
-          <span class="btn-icon-wrapper" aria-hidden="true">
-            <span class="btn-icon-box"></span>
-            <span class="btn-icon-mask">
-              <span class="icon-slide-track">
-                <svg class="arrow-svg" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter">
-                  <path d="M2.5 8h10.5"></path>
-                  <path d="M7.8 3.3L13 8l-5.2 4.7"></path>
-                </svg>
-                <svg class="arrow-svg" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter">
-                  <path d="M2.5 8h10.5"></path>
-                  <path d="M7.8 3.3L13 8l-5.2 4.7"></path>
-                </svg>
-              </span>
-            </span>
-          </span>
-        </a>
-      </div>
+      <a href="#grid-section" class="hero-scroll" aria-label="Rolar para ver os projetos">
+        <span class="hero-scroll-rail" aria-hidden="true">
+          <span class="hero-scroll-line"></span>
+        </span>
+        <span class="hero-scroll-dot" aria-hidden="true"></span>
+      </a>
     </div>
 
     <div class="hero-image-container">
@@ -721,12 +703,19 @@
     </div>
   </section>
 
-
   <!-- ==========================================================================
-       Método — Linha do Tempo
-       Desktop: percurso horizontal | Mobile/Tablet: percurso vertical
+       Jornada — cenas presas no scroll
+       A seção é alta e o palco dentro dela fica fixo (sticky): o scroll deixa
+       de arrastar conteúdo e vira linha do tempo. Cada cena aparece no centro,
+       se completa e some para a seguinte. O JS só escreve --p em cada cena;
+       todo o resto do aparecimento é calculado em CSS a partir desse número.
+
+       O argumento segue a ordem: o que é marca (não é o logo), o que acontece
+       sem ela (preço vira o único critério), o que posicionamento resolve
+       (um lugar na memória), por que isso importa antes da venda (quem não
+       compra hoje lembra depois), e só então o processo e o convite.
        ========================================================================== -->
-  <section class="method" id="metodo" aria-labelledby="metodo-titulo">
+  <section class="journey" id="jornada" aria-label="O que é branding e como o processo funciona">
 
     <svg class="tl-defs" aria-hidden="true" focusable="false" width="0" height="0">
       <symbol id="tl-arrow-right" viewBox="0 0 40 12">
@@ -737,234 +726,287 @@
         <path d="M6 0v52"></path>
         <path d="M1.8 46.5L6 53l4.2-6.5"></path>
       </symbol>
-      <symbol id="tl-arrow-corner" viewBox="0 0 16 16">
-        <path d="M2.5 1.5V10h10"></path>
-        <path d="M8.8 6.2L12.8 10l-4 3.8"></path>
-      </symbol>
     </svg>
 
-    <div class="method-inner">
+    <div class="journey-stage">
 
-      <header class="method-head tl-reveal">
-        <svg class="tl-arrow tl-arrow--head" aria-hidden="true"><use href="#tl-arrow-right"></use></svg>
-        <h2 class="method-title" id="metodo-titulo">Linha do tempo</h2>
-      </header>
+      <span class="journey-rail" aria-hidden="true"><span class="journey-rail-fill"></span></span>
 
-      <!-- ---------- Desktop ---------- -->
-      <div class="tl tl--desktop">
+      <!-- 1 — o fantasma -->
+      <article class="scene scene--text" data-hold="1">
+        <div class="scene-inner">
+          <h2 class="scene-title scene-words">O fantasma que está por trás dos seus anúncios, do seu site, do seu custo por venda e da jornada da sua empresa.</h2>
+          <p class="scene-sub rv" style="--at:.72">Ele se chama Branding.</p>
+        </div>
+      </article>
 
-        <div class="tl-row tl-groups">
-          <div class="tl-group tl-group--a tl-reveal">
-            <span class="tl-group-label">Estratégia de Marca</span>
-            <span class="tl-bracket" aria-hidden="true"></span>
-          </div>
-          <div class="tl-group tl-group--b tl-reveal">
-            <span class="tl-group-label">Identidade de Marca</span>
-            <span class="tl-bracket" aria-hidden="true"></span>
+      <!-- 2 — o que marca é de verdade -->
+      <article class="scene scene--text" data-hold="0.9">
+        <div class="scene-inner">
+          <h2 class="scene-title scene-words">Marca não é o seu logo. É o que a pessoa sente antes de ter tempo de pensar.</h2>
+          <p class="scene-sub rv" style="--at:.74">Quem forma esse sentimento é ela. Você decide com o que ela vai formar.</p>
+        </div>
+      </article>
+
+      <!-- 3 — o custo de não ter diferença -->
+      <article class="scene scene--text" data-hold="0.9">
+        <div class="scene-inner">
+          <h2 class="scene-title scene-words">Quando ninguém enxerga diferença, sobra um critério de decisão: o preço.</h2>
+          <p class="scene-sub rv" style="--at:.74">E preço é a vantagem mais fácil do mundo de copiar.</p>
+        </div>
+      </article>
+
+      <!-- 4 — o que posicionamento resolve -->
+      <article class="scene scene--text" data-hold="0.95">
+        <div class="scene-inner">
+          <h2 class="scene-title scene-words">Posicionamento não é achar um espaço no mercado. É ocupar um espaço na cabeça das pessoas.</h2>
+          <p class="scene-sub rv" style="--at:.76">Mercado é onde você compete. Memória é onde você ganha.</p>
+        </div>
+      </article>
+
+      <!-- 5 — quem não compra hoje -->
+      <article class="scene scene--text" data-hold="0.9">
+        <div class="scene-inner">
+          <h2 class="scene-title scene-words">A maior parte do seu mercado não vai comprar hoje. Marca é o que faz lembrarem de você no dia em que for.</h2>
+          <p class="scene-sub rv" style="--at:.78">Quem é lembrado antes não precisa ser o mais barato depois.</p>
+        </div>
+      </article>
+
+      <!-- 6 — o que isso faz com a venda -->
+      <article class="scene scene--text" data-hold="0.9">
+        <div class="scene-inner">
+          <h2 class="scene-title scene-words">Sem marca, toda venda começa do zero: explicar, convencer, justificar o preço, vencer a desconfiança.</h2>
+          <p class="scene-sub rv" style="--at:.78">Com marca, boa parte disso já aconteceu antes da primeira conversa.</p>
+        </div>
+      </article>
+
+      <!-- 7 — abertura do método -->
+      <article class="scene scene--text" data-hold="0.85">
+        <div class="scene-inner">
+          <h2 class="scene-title scene-words">Por trás de todo bom projeto de <em>branding</em> existe um processo de desenvolvimento.</h2>
+        </div>
+      </article>
+
+      <!-- 8 — o processo é meu -->
+      <article class="scene scene--text" data-hold="0.95">
+        <div class="scene-inner">
+          <p class="scene-body scene-words">Esse é o processo que eu sigo em todas as <span class="scene-keep" data-nosplit>Marcas<span class="scene-reg">®</span></span> que são desenvolvidas por mim, específico e adaptado ao universo de realidades do projeto e às circunstâncias da empresa.</p>
+        </div>
+      </article>
+
+      <!-- 9 — linha do tempo, percurso horizontal (telas largas) -->
+      <article class="scene scene--tl" data-hold="2.4" data-only="desktop">
+        <div class="scene-inner">
+          <div class="tl tl--desktop">
+
+            <div class="tl-row tl-groups">
+              <div class="tl-group tl-group--a rv">
+                <span class="tl-group-label">Estratégia de Marca</span>
+                <span class="tl-bracket" aria-hidden="true"></span>
+              </div>
+              <div class="tl-group tl-group--b rv">
+                <span class="tl-group-label">Identidade de Marca</span>
+                <span class="tl-bracket" aria-hidden="true"></span>
+              </div>
+            </div>
+
+            <ol class="tl-row tl-steps">
+              <li class="tl-step rv">Entrevistas<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
+              <li class="tl-step rv">Workshop<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
+              <li class="tl-step rv">Pesquisa<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
+              <li class="tl-step rv">Relatório<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
+              <li class="tl-step rv">Plataforma<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
+              <li class="tl-step rv">Key Word<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
+              <li class="tl-step rv">Key Visual<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
+              <li class="tl-step tl-step--final rv">Guia de Marca</li>
+            </ol>
+
+            <div class="tl-axis-wrap">
+              <span class="tl-ornament tl-ornament--left" aria-hidden="true"></span>
+              <div class="tl-row tl-axis" aria-hidden="true">
+                <span class="tl-dot rv"></span>
+                <span class="tl-dot rv"></span>
+                <span class="tl-dot rv"></span>
+                <span class="tl-dot rv"></span>
+                <span class="tl-dot rv"></span>
+                <span class="tl-dot rv"></span>
+                <span class="tl-dot rv"></span>
+                <span class="tl-dot tl-dot--final rv"></span>
+              </div>
+              <span class="tl-ornament tl-ornament--right" aria-hidden="true"></span>
+            </div>
+
+            <div class="tl-deliv-wrap">
+              <div class="tl-row tl-row--segments tl-deliv">
+                <p class="tl-deliv-item tl-deliv-item--1 rv">Diagnóstico</p>
+                <p class="tl-deliv-item tl-deliv-item--2 rv">Direção Estratégica &amp; Criativa</p>
+                <p class="tl-deliv-item tl-deliv-item--3 rv">Posicionamento + Verbal</p>
+                <p class="tl-deliv-item tl-deliv-item--4 rv">Visual</p>
+              </div>
+              <div class="tl-final rv">
+                <svg class="tl-arrow tl-final-arrow" aria-hidden="true"><use href="#tl-arrow-down"></use></svg>
+                <ul class="tl-final-list">
+                  <li>Estratégia</li>
+                  <li>Posicionamento</li>
+                  <li>Identidade Verbal &amp; Visual</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="tl-row tl-row--segments tl-phases">
+              <p class="tl-phase tl-phase--1 rv"><span class="tl-phase-rule" aria-hidden="true"></span>Coletando</p>
+              <p class="tl-phase tl-phase--2 rv"><span class="tl-phase-rule" aria-hidden="true"></span>Explorando</p>
+              <p class="tl-phase tl-phase--3 rv"><span class="tl-phase-rule" aria-hidden="true"></span>Criando</p>
+              <p class="tl-phase tl-phase--4 rv"><span class="tl-phase-rule" aria-hidden="true"></span>Definindo</p>
+            </div>
+
           </div>
         </div>
+      </article>
 
-        <ol class="tl-row tl-steps">
-          <li class="tl-step">Entrevistas<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
-          <li class="tl-step">Workshop<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
-          <li class="tl-step">Pesquisa<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
-          <li class="tl-step">Relatório<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
-          <li class="tl-step">Plataforma<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
-          <li class="tl-step">Key Word<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
-          <li class="tl-step">Key Visual<svg class="tl-arrow tl-step-arrow" aria-hidden="true"><use href="#tl-arrow-right"></use></svg></li>
-          <li class="tl-step tl-step--final">Guia de Marca</li>
-        </ol>
+      <!-- 9a — percurso vertical, primeira metade (telas estreitas) -->
+      <article class="scene scene--tl" data-hold="1.45" data-only="mobile">
+        <div class="scene-inner">
+          <div class="tl tl--mobile" data-sequence>
+            <span class="tl-m-ornament rv" aria-hidden="true"></span>
 
-        <div class="tl-axis-wrap">
-          <span class="tl-ornament tl-ornament--left" aria-hidden="true"></span>
-          <div class="tl-row tl-axis" aria-hidden="true">
-            <span class="tl-dot"></span>
-            <span class="tl-dot"></span>
-            <span class="tl-dot"></span>
-            <span class="tl-dot"></span>
-            <span class="tl-dot"></span>
-            <span class="tl-dot"></span>
-            <span class="tl-dot"></span>
-            <span class="tl-dot tl-dot--final"></span>
+            <h3 class="tl-m-group rv">
+              <span class="tl-m-rule" aria-hidden="true"></span>
+              <span class="tl-m-txt">Estratégia de Marca</span>
+              <span class="tl-m-rule" aria-hidden="true"></span>
+            </h3>
+
+            <p class="tl-m-phase rv">Coletando</p>
+            <p class="tl-m-step rv">Entrevistas</p>
+            <p class="tl-m-step rv">Workshop</p>
+            <p class="tl-m-deliv rv">
+              <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
+              <span class="tl-m-txt">Diagnóstico</span>
+              <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
+            </p>
+
+            <p class="tl-m-phase rv">Explorando</p>
+            <p class="tl-m-step rv">Pesquisa</p>
+            <p class="tl-m-step rv">Relatório</p>
+            <p class="tl-m-deliv rv">
+              <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
+              <span class="tl-m-txt">Direção Estratégica &amp; Criativa</span>
+              <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
+            </p>
           </div>
-          <span class="tl-ornament tl-ornament--right" aria-hidden="true"></span>
         </div>
+      </article>
 
-        <div class="tl-deliv-wrap">
-          <div class="tl-row tl-row--segments tl-deliv">
-            <p class="tl-deliv-item tl-deliv-item--1 tl-reveal">Diagnóstico</p>
-            <p class="tl-deliv-item tl-deliv-item--2 tl-reveal">Direção Estratégica &amp; Criativa</p>
-            <p class="tl-deliv-item tl-deliv-item--3 tl-reveal">Posicionamento + Verbal</p>
-            <p class="tl-deliv-item tl-deliv-item--4 tl-reveal">Visual</p>
-          </div>
-          <div class="tl-final tl-reveal">
-            <svg class="tl-arrow tl-final-arrow" aria-hidden="true"><use href="#tl-arrow-down"></use></svg>
-            <ul class="tl-final-list">
+      <!-- 9b — percurso vertical, segunda metade (telas estreitas) -->
+      <article class="scene scene--tl" data-hold="1.45" data-only="mobile">
+        <div class="scene-inner">
+          <div class="tl tl--mobile" data-sequence>
+            <h3 class="tl-m-group tl-m-group--first rv">
+              <span class="tl-m-rule" aria-hidden="true"></span>
+              <span class="tl-m-txt">Identidade de Marca</span>
+              <span class="tl-m-rule" aria-hidden="true"></span>
+            </h3>
+
+            <p class="tl-m-phase rv">Criando</p>
+            <p class="tl-m-step rv">Plataforma</p>
+            <p class="tl-m-deliv rv">
+              <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
+              <span class="tl-m-txt">Posicionamento + Verbal</span>
+              <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
+            </p>
+            <p class="tl-m-step rv">Key Word</p>
+            <p class="tl-m-deliv rv">
+              <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
+              <span class="tl-m-txt">Visual</span>
+              <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
+            </p>
+
+            <p class="tl-m-phase rv">Definindo</p>
+            <p class="tl-m-step rv">Key Visual</p>
+            <p class="tl-m-step tl-m-step--final rv">Guia de Marca</p>
+
+            <svg class="tl-arrow tl-m-final-arrow rv" aria-hidden="true"><use href="#tl-arrow-down"></use></svg>
+            <ul class="tl-m-final rv">
               <li>Estratégia</li>
               <li>Posicionamento</li>
               <li>Identidade Verbal &amp; Visual</li>
             </ul>
           </div>
         </div>
+      </article>
 
-        <div class="tl-row tl-row--segments tl-phases">
-          <p class="tl-phase tl-phase--1 tl-reveal"><span class="tl-phase-rule" aria-hidden="true"></span>Coletando</p>
-          <p class="tl-phase tl-phase--2 tl-reveal"><span class="tl-phase-rule" aria-hidden="true"></span>Explorando</p>
-          <p class="tl-phase tl-phase--3 tl-reveal"><span class="tl-phase-rule" aria-hidden="true"></span>Criando</p>
-          <p class="tl-phase tl-phase--4 tl-reveal"><span class="tl-phase-rule" aria-hidden="true"></span>Definindo</p>
+      <!-- 10 — fechamento -->
+      <article class="scene scene--text" data-hold="0.95">
+        <div class="scene-inner">
+          <h2 class="scene-title scene-words">No fim, o que você leva não é um logo. É um motivo para escolherem você mesmo quando o concorrente cobra menos.</h2>
         </div>
+      </article>
 
-      </div>
+      <!-- 11 — contato. Cena de fundo claro: é ela que leva a tela do escuro
+           para o verde, porque o painel inteiro aparece junto com o conteúdo.
+           data-still: a cena não desliza, senão a troca de fundo balança. -->
+      <article class="scene scene--form scene--last" data-hold="1.3" data-still data-solo data-fit-min="0.78" id="contato">
+        <div class="scene-inner">
+          <p class="contato-kicker rv" style="--at:.32">Primeiro contato</p>
+          <h2 class="contato-title rv" style="--at:.36">Vamos olhar para a sua marca.</h2>
+          <p class="contato-sub rv" style="--at:.41">Quatro campos. Eu respondo pessoalmente.</p>
 
-      <!-- ---------- Mobile / Tablet — percurso vertical centralizado ---------- -->
-      <div class="tl tl--mobile">
+          <form class="form" id="form-contato" novalidate>
+            <div class="field rv" style="--at:.46">
+              <label for="f-nome">Nome</label>
+              <input id="f-nome" name="nome" type="text" autocomplete="name" required>
+            </div>
+            <div class="field rv" style="--at:.50">
+              <label for="f-nicho">Nicho da sua empresa</label>
+              <input id="f-nicho" name="nicho" type="text" autocomplete="organization" required>
+            </div>
+            <div class="field rv" style="--at:.54">
+              <label for="f-email">E-mail</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field rv" style="--at:.58">
+              <label for="f-fone">WhatsApp</label>
+              <input id="f-fone" name="telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(54) 99159-5375" required>
+            </div>
 
-        <span class="tl-m-ornament" aria-hidden="true"></span>
+            <!-- Isca de robô: fica fora da tela e ninguém preenche à mão -->
+            <div class="form-trap" aria-hidden="true">
+              <label for="f-site">Não preencha este campo</label>
+              <input id="f-site" name="site" type="text" tabindex="-1" autocomplete="off">
+            </div>
 
-        <h3 class="tl-m-group">
-          <span class="tl-m-rule" aria-hidden="true"></span>
-          <span class="tl-m-txt">Estratégia de Marca</span>
-          <span class="tl-m-rule" aria-hidden="true"></span>
-        </h3>
+            <p class="form-msg" id="form-msg" role="alert" hidden></p>
 
-        <p class="tl-m-phase">Coletando</p>
-        <p class="tl-m-step">Entrevistas</p>
-        <p class="tl-m-step">Workshop</p>
-        <p class="tl-m-deliv">
-          <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
-          <span class="tl-m-txt">Diagnóstico</span>
-          <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
-        </p>
-
-        <p class="tl-m-phase">Explorando</p>
-        <p class="tl-m-step">Pesquisa</p>
-        <p class="tl-m-step">Relatório</p>
-        <p class="tl-m-deliv">
-          <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
-          <span class="tl-m-txt">Direção Estratégica &amp; Criativa</span>
-          <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
-        </p>
-
-        <h3 class="tl-m-group">
-          <span class="tl-m-rule" aria-hidden="true"></span>
-          <span class="tl-m-txt">Identidade de Marca</span>
-          <span class="tl-m-rule" aria-hidden="true"></span>
-        </h3>
-
-        <p class="tl-m-phase">Criando</p>
-        <p class="tl-m-step">Plataforma</p>
-        <p class="tl-m-deliv">
-          <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
-          <span class="tl-m-txt">Posicionamento + Verbal</span>
-          <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
-        </p>
-        <p class="tl-m-step">Key Word</p>
-        <p class="tl-m-deliv">
-          <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
-          <span class="tl-m-txt">Visual</span>
-          <span class="tl-m-rule tl-m-rule--dashed" aria-hidden="true"></span>
-        </p>
-
-        <p class="tl-m-phase">Definindo</p>
-        <p class="tl-m-step">Key Visual</p>
-        <p class="tl-m-step tl-m-step--final">Guia de Marca</p>
-
-        <svg class="tl-arrow tl-m-final-arrow" aria-hidden="true"><use href="#tl-arrow-down"></use></svg>
-        <ul class="tl-m-final">
-          <li>Estratégia</li>
-          <li>Posicionamento</li>
-          <li>Identidade Verbal &amp; Visual</li>
-        </ul>
-
-        <span class="tl-m-ornament tl-m-ornament--end" aria-hidden="true"></span>
-      </div>
+            <button class="hero-btn form-submit rv" style="--at:.63" type="submit" id="form-submit">
+              <span class="btn-text-mask">
+                <span class="btn-text-track">
+                  <span class="btn-text">Enviar</span>
+                  <span class="btn-text">Enviar</span>
+                </span>
+              </span>
+              <span class="btn-icon-wrapper" aria-hidden="true">
+                <span class="btn-icon-box"></span>
+                <span class="btn-icon-mask">
+                  <span class="icon-slide-track">
+                    <svg class="arrow-svg" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter">
+                      <path d="M2.5 8h10.5"></path>
+                      <path d="M7.8 3.3L13 8l-5.2 4.7"></path>
+                    </svg>
+                    <svg class="arrow-svg" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter">
+                      <path d="M2.5 8h10.5"></path>
+                      <path d="M7.8 3.3L13 8l-5.2 4.7"></path>
+                    </svg>
+                  </span>
+                </span>
+              </span>
+            </button>
+          </form>
+        </div>
+      </article>
 
     </div>
   </section>
 
-
-  <!-- ==========================================================================
-       Slides — esteira infinita, 3 faixas em sentidos alternados
-       Cada faixa repete o mesmo conjunto 2x; a animação desloca -50%,
-       o que faz o loop emendar sem salto.
-       A ordem das imagens não é a do deck: elas são intercaladas por peso
-       visual (creme / colorida) para nenhuma faixa virar uma mancha clara.
-       ========================================================================== -->
-  <section class="slides" id="slides" aria-label="Slides de guias de marca">
-    <div class="slides-row slides-row--1">
-      <div class="slides-track">
-        <!-- conjunto A -->
-        <div class="slides-item"><img src="SLIDES/img1_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img4_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img7_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img2_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img17_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img12_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img25_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img19_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img21_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <!-- conjunto B (cópia do loop) -->
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img1_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img4_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img7_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img2_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img17_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img12_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img25_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img19_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img21_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-      </div>
-    </div>
-    <div class="slides-row slides-row--2 slides-row--reverse">
-      <div class="slides-track">
-        <!-- conjunto A -->
-        <div class="slides-item"><img src="SLIDES/img3_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img6_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img9_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img11_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img20_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img14_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img26_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img22_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img18_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <!-- conjunto B (cópia do loop) -->
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img3_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img6_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img9_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img11_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img20_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img14_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img26_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img22_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img18_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-      </div>
-    </div>
-    <div class="slides-row slides-row--3">
-      <div class="slides-track">
-        <!-- conjunto A -->
-        <div class="slides-item"><img src="SLIDES/img5_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img8_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img15_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img13_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img23_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img10_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img27_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img16_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item"><img src="SLIDES/img24_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <!-- conjunto B (cópia do loop) -->
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img5_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img8_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img15_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img13_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img23_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img10_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img27_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img16_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-        <div class="slides-item" aria-hidden="true"><img src="SLIDES/img24_1x.webp" alt="" loading="eager" fetchpriority="low" decoding="async" draggable="false"></div>
-      </div>
-    </div>
-  </section>
-
-  <script src="main.js?v=12"></script>
+  <script src="main.js?v=29"></script>
 </body>
 </html>

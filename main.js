@@ -1,123 +1,389 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const btnContato = document.getElementById('btn-contato');
-  
-  if (btnContato) {
-    btnContato.addEventListener('click', (e) => {
-      console.log('CTA clicked: Entrar em contato');
-    });
-  }
+/* Para onde o formulário envia. Vazio ou fora do ar: o visitante recebe o
+   caminho do WhatsApp em vez de um erro seco. */
+const FORM_ENDPOINT = 'enviar.php';
+const WHATSAPP_NUMERO = '5554991595375';
 
+document.addEventListener('DOMContentLoaded', () => {
   // Preload all brand backgrounds and SVGs immediately to avoid black flashes
   preloadAllBrandAssets();
 
   // Showcase Grid — Synchronized Two-Group Alternating Slider
   initGridCardSliders();
 
-  // Método — revela a linha do tempo quando entra na viewport
-  initMethodReveal();
+  // Jornada — cenas presas no scroll
+  initJourney();
 
-  // Slides — caixa de seleção que acende uma imagem por vez
-  initSlidesSpotlight();
+  // Contato — validação, máscara e envio
+  initForm();
 });
 
-function initSlidesSpotlight() {
-  const section = document.querySelector('.slides');
-  if (!section) return;
+/* ==========================================================================
+   Jornada
+   A seção é alta e o palco dentro dela é sticky: enquanto ela passa, o scroll
+   não arrasta nada, ele avança um relógio. Cada cena ocupa uma fatia desse
+   relógio (data-hold, em telas de scroll) e recebe um único número, --p, com
+   o seu próprio avanço. O CSS deriva dele todo o aparecimento, então um
+   quadro de scroll custa duas ou três escritas de estilo, não um layout.
+   ========================================================================== */
+function initJourney() {
+  const journey = document.querySelector('.journey');
+  if (!journey) return;
 
-  const items = Array.from(section.querySelectorAll('.slides-item'));
-  if (!items.length) return;
+  const stage = journey.querySelector('.journey-stage');
+  const all = Array.from(journey.querySelectorAll('.scene'));
+  if (!stage || !all.length) return;
 
-  // Só apaga a esteira depois de garantir que a caixa vai funcionar
-  section.classList.add('is-spotlight');
+  // Sem animação: a seção fica empilhada e inteira, como está no HTML
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const DWELL = 2800;   // tempo parado em cada imagem
-  const MARGIN = 0.14;  // zona segura: 14% de cada lado ficam fora de jogo
-  const TICK = 200;
+  all.forEach(splitWords);
+  all.forEach(spreadSequence);
 
-  let current = null;
-  let litAt = 0;
-  let visible = true;
+  const wide = window.matchMedia('(min-width: 981px)');
+  journey.classList.add('js-journey');
 
-  // Imagem inteira dentro da faixa central da tela, longe das bordas
-  function inSafeZone(el) {
-    const rect = el.getBoundingClientRect();
-    const vw = window.innerWidth;
-    return rect.left > vw * MARGIN && rect.right < vw * (1 - MARGIN);
-  }
+  let scenes = [];
+  let total = 1;
+  let top = 0;
+  let span = 1;
 
-  function pick() {
-    const currentSrc = current ? current.querySelector('img').getAttribute('src') : null;
+  // Monta a lista de cenas válidas para a largura atual e reparte o relógio
+  function layout() {
+    const desktop = wide.matches;
+    let start = 0;
+    scenes = [];
 
-    const pool = items.filter(el => {
-      if (el === current) return false;
-      if (currentSrc && el.querySelector('img').getAttribute('src') === currentSrc) return false;
-      return inSafeZone(el);
+    all.forEach(el => {
+      const only = el.dataset.only;
+      const on = !only || (only === 'desktop') === desktop;
+      el.hidden = !on;
+      if (!on) return;
+
+      const hold = parseFloat(el.dataset.hold) || 1;
+      scenes.push({
+        el: el,
+        inner: el.firstElementChild,
+        start: start,
+        hold: hold,
+        last: el.classList.contains('scene--last'),
+        // A cena do formulário é a que troca o fundo da tela: se ela
+        // deslizasse, o painel claro entraria torto por cima do escuro
+        still: el.hasAttribute('data-still'),
+        // Entra sozinha, sem cruzar com a anterior
+        solo: el.hasAttribute('data-solo'),
+        fitMin: parseFloat(el.dataset.fitMin) || 0.6,
+        v: -1,
+        p: -1,
+        w: -1
+      });
+      start += hold;
     });
-    if (!pool.length) return null;
 
-    // Prefere saltar para outra faixa, para a caixa não andar só na horizontal
-    const currentRow = current ? current.parentElement : null;
-    const otherRows = pool.filter(el => el.parentElement !== currentRow);
-    const from = otherRows.length ? otherRows : pool;
+    total = start || 1;
+    journey.style.setProperty('--journey-len', (total + 1).toFixed(2));
 
-    return from[Math.floor(Math.random() * from.length)];
+    fit();
+    measure();
   }
 
-  function jump() {
-    const next = pick();
-    if (!next) return;
-
-    if (current) current.classList.remove('is-lit');
-    current = next;
-    current.classList.add('is-lit');
-    litAt = performance.now();
+  // O palco não rola: o que não couber na altura dele encolhe até caber
+  function fit() {
+    scenes.forEach(s => {
+      if (!s.inner) return;
+      s.inner.style.setProperty('--fit', '1');
+      const cs = getComputedStyle(s.el);
+      const avail = s.el.clientHeight
+        - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      const h = s.inner.scrollHeight;
+      const k = (h > avail && h > 0) ? Math.max(avail / h, s.fitMin) : 1;
+      s.inner.style.setProperty('--fit', k.toFixed(3));
+    });
   }
 
-  // Não gasta trabalho enquanto a dobra está fora da tela
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(entries => {
-      visible = entries[0].isIntersecting;
-    }, { threshold: 0 }).observe(section);
+  function measure() {
+    top = journey.getBoundingClientRect().top + window.scrollY;
+    span = Math.max(journey.offsetHeight - stage.offsetHeight, 1);
   }
 
-  jump();
+  function smooth(t) {
+    if (t <= 0) return 0;
+    if (t >= 1) return 1;
+    return t * t * (3 - 2 * t);
+  }
 
-  setInterval(() => {
-    if (!visible) return;
-    if (!current) {
-      jump();
-      return;
-    }
-    // Troca no fim do tempo, ou antes se a imagem estiver chegando na borda
-    if (performance.now() - litAt > DWELL || !inSafeZone(current)) jump();
-  }, TICK);
-}
+  // Entra de -0.12 a 0.10 e sai de 0.90 a 1.12: as janelas de duas cenas
+  // vizinhas se cruzam em volta da fronteira, então uma troca pela outra
+  // sem passar por uma tela vazia. A última não sai — quem a leva embora
+  // é o scroll normal da página, já indo para o formulário.
+  function visibility(x, last, solo) {
+    // A cena do formulário é um painel claro opaco: ela não aparece por
+    // transparência, ela sobe por cima (ver --wipe). Se cruzasse por
+    // opacidade, o texto verde da cena anterior sumiria no verde dela, e
+    // apagar uma antes da outra deixaria um quadro preto entre as duas.
+    if (solo) return x > -0.02 ? 1 : 0;
 
-function initMethodReveal() {
-  const section = document.querySelector('.method');
-  if (!section) return;
+    if (x <= -0.12) return 0;
+    if (x < 0.10) return smooth((x + 0.12) / 0.22);
+    if (last || x < 0.90) return 1;
+    if (x < 1.12) return smooth((1.12 - x) / 0.22);
+    return 0;
+  }
 
-  if (!('IntersectionObserver' in window)) return;
+  function update() {
+    let p = (window.scrollY - top) / span;
+    if (p < -0.4) p = -0.4;
+    if (p > 1.4) p = 1.4;
 
-  // Só esconde depois de garantir que o observer vai revelar
-  section.classList.add('js-reveal');
+    const pos = p * total;
+    journey.style.setProperty('--jp', Math.min(Math.max(p, 0), 1).toFixed(3));
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
+    scenes.forEach(s => {
+      const x = (pos - s.start) / s.hold;
+      const v = visibility(x, s.last, s.solo);
+
+      if (v !== s.v) {
+        s.v = v;
+        s.el.style.opacity = v;
+        s.el.classList.toggle('is-on', v > 0.001);
+        if (!s.still) {
+          // Sobe entrando e continua subindo saindo, nunca volta atrás
+          const shift = (x < 0.5 ? (1 - v) : (v - 1)) * 26;
+          s.el.style.transform = 'translate3d(0,' + shift.toFixed(1) + 'px,0)';
+        }
+      }
+
+      if (v <= 0) return;
+
+      // Painel que sobe: a borda de cima sobe do pé da tela até o topo
+      if (s.solo) {
+        let w = 1 - x / 0.18;
+        w = w < 0 ? 0 : (w > 1 ? 1 : w);
+        if (Math.abs(w - s.w) > 0.003) {
+          s.w = w;
+          s.el.style.setProperty('--wipe', w.toFixed(3));
+        }
+      }
+
+      // O conteúdo termina de aparecer antes de a cena começar a sair
+      let cp = x / 0.86;
+      cp = cp < 0 ? 0 : (cp > 1 ? 1 : cp);
+      if (Math.abs(cp - s.p) > 0.002) {
+        s.p = cp;
+        s.el.style.setProperty('--p', cp.toFixed(3));
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  }
 
-  observer.observe(section);
+  let queued = false;
+  function onScroll() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      update();
+    });
+  }
+
+  let resizeTimer = 0;
+  function onResize() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      layout();
+      update();
+    }, 140);
+  }
+
+  layout();
+  update();
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onResize);
+  if (wide.addEventListener) wide.addEventListener('change', onResize);
+
+  // As medidas mudam quando as fontes do projeto substituem as de fallback
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => { layout(); update(); });
+  }
 }
+
+// Envolve cada palavra num <span class="w"> numerado, para o CSS poder
+// acendê-las uma a uma. data-nosplit mantém o trecho inteiro como uma palavra.
+function splitWords(scene) {
+  scene.querySelectorAll('.scene-words').forEach(root => {
+    let count = 0;
+
+    (function walk(node) {
+      Array.from(node.childNodes).forEach(child => {
+        if (child.nodeType === 3) {
+          if (!child.textContent.trim()) return;
+          const frag = document.createDocumentFragment();
+          child.textContent.split(/(\s+)/).forEach(part => {
+            if (!part) return;
+            if (!part.trim()) {
+              frag.appendChild(document.createTextNode(part));
+              return;
+            }
+            const word = document.createElement('span');
+            word.className = 'w';
+            word.style.setProperty('--i', count++);
+            word.textContent = part;
+            frag.appendChild(word);
+          });
+          child.replaceWith(frag);
+        } else if (child.nodeType === 1) {
+          if (child.hasAttribute('data-nosplit')) {
+            child.classList.add('w');
+            child.style.setProperty('--i', count++);
+          } else {
+            walk(child);
+          }
+        }
+      });
+    })(root);
+
+    root.style.setProperty('--n', count);
+  });
+}
+
+// Percurso vertical: os blocos aparecem na ordem em que estão no HTML,
+// repartidos ao longo do avanço da cena
+function spreadSequence(scene) {
+  scene.querySelectorAll('[data-sequence]').forEach(list => {
+    const items = Array.from(list.children).filter(el => el.classList.contains('rv'));
+    const last = Math.max(items.length - 1, 1);
+    items.forEach((el, i) => {
+      el.style.setProperty('--at', (0.03 + (i / last) * 0.74).toFixed(3));
+    });
+  });
+}
+
+/* ==========================================================================
+   Contato
+   ========================================================================== */
+function initForm() {
+  const form = document.getElementById('form-contato');
+  if (!form) return;
+
+  const msg = document.getElementById('form-msg');
+  const inputs = Array.from(form.querySelectorAll('.field input'));
+  const phone = form.querySelector('input[type="tel"]');
+
+  if (phone) {
+    phone.addEventListener('input', () => {
+      phone.value = maskPhone(phone.value);
+    });
+  }
+
+  inputs.forEach(input => {
+    input.addEventListener('input', () => {
+      input.closest('.field').classList.remove('is-invalid');
+    });
+  });
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (form.classList.contains('is-sending')) return;
+
+    let firstBad = null;
+    inputs.forEach(input => {
+      const ok = isValid(input);
+      input.closest('.field').classList.toggle('is-invalid', !ok);
+      if (!ok && !firstBad) firstBad = input;
+    });
+
+    if (firstBad) {
+      setMessage(msg, 'Confira os campos destacados antes de enviar.');
+      firstBad.focus();
+      return;
+    }
+
+    setMessage(msg, '');
+    form.classList.add('is-sending');
+
+    const lead = {
+      nome: form.nome.value.trim(),
+      nicho: form.nicho.value.trim(),
+      email: form.email.value.trim(),
+      telefone: form.telefone.value.trim(),
+      site: form.site ? form.site.value : '',
+      origem: location.href
+    };
+
+    sendLead(lead).then(ok => {
+      if (ok) {
+        window.location.href = 'obrigado.html';
+        return;
+      }
+      form.classList.remove('is-sending');
+      setMessage(
+        msg,
+        'Não consegui enviar agora. Me chame no WhatsApp: ',
+        whatsappLink(lead)
+      );
+    });
+  });
+}
+
+function sendLead(lead) {
+  if (!FORM_ENDPOINT) return Promise.resolve(false);
+
+  return fetch(FORM_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(lead)
+  })
+    .then(response => (response.ok ? response.json() : null))
+    .then(data => !!(data && data.ok))
+    .catch(() => false);
+}
+
+function whatsappLink(lead) {
+  const texto = 'Olá, Pedro. Vim pelo site.\n'
+    + 'Nome: ' + lead.nome + '\n'
+    + 'Nicho: ' + lead.nicho + '\n'
+    + 'E-mail: ' + lead.email;
+  return 'https://wa.me/' + WHATSAPP_NUMERO + '?text=' + encodeURIComponent(texto);
+}
+
+function setMessage(el, text, href) {
+  if (!el) return;
+  el.textContent = text;
+  if (href) {
+    const link = document.createElement('a');
+    link.href = href;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = 'abrir conversa';
+    el.appendChild(link);
+  }
+  el.hidden = !text;
+}
+
+function isValid(input) {
+  const value = input.value.trim();
+  if (!value) return false;
+  if (input.type === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+  if (input.type === 'tel') return value.replace(/\D/g, '').length >= 10;
+  return value.length >= 2;
+}
+
+function maskPhone(value) {
+  const d = value.replace(/\D/g, '').slice(0, 11);
+  if (!d) return '';
+  if (d.length <= 2) return '(' + d;
+  if (d.length <= 6) return '(' + d.slice(0, 2) + ') ' + d.slice(2);
+  if (d.length <= 10) return '(' + d.slice(0, 2) + ') ' + d.slice(2, 6) + '-' + d.slice(6);
+  return '(' + d.slice(0, 2) + ') ' + d.slice(2, 7) + '-' + d.slice(7);
+}
+
+/* ==========================================================================
+   Grid de marcas
+   ========================================================================== */
 
 // Preloads and decodes every single image and SVG on page load
 function preloadAllBrandAssets() {
   const allImages = Array.from(document.querySelectorAll('.branding-grid img'));
-  
+
   allImages.forEach(img => {
     // Force immediate browser fetching
     const src = img.getAttribute('src');
@@ -155,7 +421,7 @@ function initGridCardSliders() {
 
       const current = state.get(card);
       const next = (current + 1) % slides.length;
-      
+
       const nextSlide = slides[next];
       const nextBg = nextSlide.querySelector('.slide-bg');
 
@@ -164,9 +430,23 @@ function initGridCardSliders() {
         return;
       }
 
-      slides[current].classList.remove('active');
+      const currentSlide = slides[current];
+
+      // Limpa quem saiu na troca anterior e já está coberto
+      slides.forEach(slide => {
+        if (slide !== currentSlide) slide.classList.remove('is-leaving');
+      });
+
+      // O atual passa a recuar por baixo; o próximo entra por cima.
+      // Tirar is-entering antes de recolocar reinicia a animação
+      // quando o card só tem dois slides e eles se revezam.
+      currentSlide.classList.remove('active', 'is-entering');
+      currentSlide.classList.add('is-leaving');
+
+      nextSlide.classList.remove('is-leaving');
+      nextSlide.classList.add('active', 'is-entering');
+
       state.set(card, next);
-      nextSlide.classList.add('active');
     });
   }
 
@@ -178,5 +458,3 @@ function initGridCardSliders() {
     setInterval(() => advanceGroup(groupB), INTERVAL);
   }, OFFSET);
 }
-
-
